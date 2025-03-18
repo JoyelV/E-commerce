@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "build": "echo 'No build step required for EJS'",
+    "vercel-build": "npm install"
   },
   "keywords": [],
   "author": "",
