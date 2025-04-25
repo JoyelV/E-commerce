@@ -712,10 +712,12 @@
     <!-- Start Offcanvas Search Bar Section -->
     <div id="search" class="search-modal">
         <button type="button" class="close">×</button>
-        <form action="/search" method="GET"> <!-- Modified form action -->
-            <input type="text" placeholder="Type product name here" name="q" /> <!-- Added name attribute for query string parameter -->
-            <input type="hidden" name="page" value="<%= currentPage %>">
-            <button type="submit" class="btn btn-lg btn-golden">Search</button>
+        <form action="/search" method="GET">
+            <div class="form-fild-newsletter-single-item input-color--golden">
+                <input type="text" placeholder="Type product name here..." name="q">
+                <input type="hidden" name="page" value="<%= currentPage %>">
+                <button type="submit" class="btn btn-lg btn-golden">SEARCH</button>
+            </div>
         </form>
     </div>
     
@@ -829,16 +831,13 @@
 </div>
 
 <div class="shop__sidebar__search">
-
-    <form id="searchForm" action="/shop?q=<%= query %>&sort=inStock&category=<%= cate %>&page=<%=currentPage %>" method="GET">
-        <div class="input-group">
-            <input type="search" class="form-control" placeholder="Search product name or brand name here..." name="q">
-            <!-- Include hidden input field for current page -->
-            <input type="hidden" name="page" value="<%= currentPage %>">
-                <button type="submit" class="btn btn-lg btn-golden" style="height: 45px;">Search</button>
-        </div>
-    </form>
+    <div class="input-group">
+        <input type="search" id="searchInput" class="form-control"
+            placeholder="Search product name or brand name here...">
+        <button id="searchButton" class="btn btn-lg btn-golden" style="height: 45px;">Search</button>
+    </div>
 </div>
+
 <!-- Start Sort Select Option -->
 <div class="filter-section" style="position: relative;">
     <div class="dropdown">
@@ -1018,7 +1017,6 @@
                         </div>
                     </div> <!-- End Tab Wrapper -->
 
-<!-- Pagination -->
 <!-- Pagination -->
 <div class="page-pagination text-center" data-aos="fade-up" data-aos-delay="0">
     <ul>
@@ -1472,7 +1470,18 @@
                 });
             });
         }
+
+const searchButton = document.getElementById("searchButton");
+const searchInput = document.getElementById("searchInput");
+
+searchButton.addEventListener("click", function () {
+    const query = encodeURIComponent(searchInput.value.trim());
+    const category = "<%= cate %>";        
+    const sort = "<%= sort %>";               
+    const page = "<%= currentPage %>";   
+    const url = `/shop?q=${query}&sort=${sort}&category=${category}&page=${page}`;
+    window.location.href = url;
+    });
 </script>
 </body>
-
 </html>

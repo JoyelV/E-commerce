@@ -15,6 +15,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="adminassets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link href="adminassets/css/main.css" rel="stylesheet" type="text/css" />
+    <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -101,18 +102,6 @@
     <main class="main-wrap">
         <header class="main-header navbar">
             <div class="col-search">
-                <!-- <form class="searchform">
-                    <div class="input-group">
-                        <input list="search_terms" type="text" class="form-control" placeholder="Search term">
-                        <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
-                    </div>
-                    <datalist id="search_terms">
-                        <option value="Products">
-                        <option value="New orders">
-                        <option value="Apple iphone">
-                        <option value="Ahmed Hassan">
-                    </datalist>
-                </form> -->
             </div>
             <div class="col-nav">
                 <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
@@ -133,10 +122,7 @@
                         <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="adminassets/imgs/people/avatar2.jpg" alt="User"></a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
                             <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
-                            <!-- <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a> -->
-                            <!-- <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a> -->
-                            <!-- <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a> -->
-                            <!-- <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a> -->
+
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item text-danger" href="/admin/logout"><i class="material-icons md-exit_to_app"></i>Logout</a>
                         </div>
@@ -212,11 +198,18 @@
                                 </div>
                             
                                 <!-- Media Section for Images -->
-                                <div class="mb-4">
+                                <!-- <div class="mb-4">
                                     <label for="product_images" class="form-label">Images</label>
-                                    <input type="file" class="form-control" name="images" id="product_images" multiple>
+                                    <input type="file" class="form-control" name="images[]" id="product_images" accept="image/*" multiple>
                                     <small class="form-text text-muted">You can select multiple images(3 only).</small>
-                                    <p id="imagesError" class="text-danger"></p> <!-- Placeholder for images error -->
+                                    <p id="imagesError" class="text-danger"></p> <!-- Placeholder for images error
+                                </div> -->
+
+                                <!-- Media Section for Images -->
+                                <div class="mb-4">
+                                <label for="product_images" class="form-label">Upload Product Images</label>
+                                <input type="file" class="form-control" id="product_images" name="images" accept="image/*" multiple>
+                                <p id="imageError" class="text-danger"></p>
                                 </div>
                             
                                 <div class="mb-4">
@@ -253,6 +246,96 @@
             </div>
         </footer>
     </main>
+
+<!-- Image Crop Modal -->
+<div id="cropModal" style="display:none; position:fixed; top:10%; left:30%; width:40%; height:80%; background:white; border:1px solid #ccc; z-index:1000;">
+    <div style="text-align: right; padding: 10px;">
+        <button onclick="cropCurrentImage()" class="btn btn-primary">Crop</button>
+        <button onclick="skipImage()" class="btn btn-secondary">Skip</button>
+        <button onclick="finishCropping()" class="btn btn-success">Finish</button>
+        <button onclick="closeCropModal()" class="btn btn-danger">Cancel</button>
+    </div>
+    <div style="text-align: center;">
+        <img id="imageToCrop" style="max-width:100%; max-height:500px;">
+    </div>
+</div>
+
+<script>
+    let cropper;
+    let imageQueue = [];
+    let croppedImages = [];
+    let currentImageIndex = 0;
+
+    document.getElementById("product_images").addEventListener("change", function (e) {
+        imageQueue = Array.from(e.target.files);
+        croppedImages = [];
+        currentImageIndex = 0;
+        if (imageQueue.length > 0) {
+            showImageForCropping(imageQueue[currentImageIndex]);
+        }
+    });
+
+    function showImageForCropping(file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            const imageElement = document.getElementById("imageToCrop");
+            imageElement.src = event.target.result;
+            document.getElementById("cropModal").style.display = "block";
+            if (cropper) cropper.destroy();
+            cropper = new Cropper(imageElement, {
+                aspectRatio: 1,
+                viewMode: 1
+            });
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function cropCurrentImage() {
+        if (!cropper) return;
+        const canvas = cropper.getCroppedCanvas();
+        canvas.toBlob(function (blob) {
+            const croppedFile = new File([blob], imageQueue[currentImageIndex].name, { type: "image/png" });
+            croppedImages.push(croppedFile);
+            nextImage();
+        });
+    }
+
+    function skipImage() {
+        croppedImages.push(imageQueue[currentImageIndex]); // Keep original if skipped
+        nextImage();
+    }
+
+    function nextImage() {
+        cropper.destroy();
+        currentImageIndex++;
+        if (currentImageIndex < imageQueue.length) {
+            showImageForCropping(imageQueue[currentImageIndex]);
+        } else {
+            finishCropping();
+        }
+    }
+
+    function finishCropping() {
+        document.getElementById("cropModal").style.display = "none";
+        if (cropper) cropper.destroy();
+
+        // Create new FileList from croppedImages and set to input
+        const dataTransfer = new DataTransfer();
+        croppedImages.forEach(file => {
+            dataTransfer.items.add(file);
+        });
+        document.getElementById("product_images").files = dataTransfer.files;
+    }
+
+    function closeCropModal() {
+        document.getElementById("cropModal").style.display = "none";
+        if (cropper) cropper.destroy();
+        croppedImages = [];
+        imageQueue = [];
+        currentImageIndex = 0;
+    }
+</script>
+
     <script src="adminassets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="adminassets/js/vendors/bootstrap.bundle.min.js"></script>
     <script src="adminassets/js/vendors/select2.min.js"></script>
@@ -260,6 +343,7 @@
     <script src="adminassets/js/vendors/jquery.fullscreen.min.js"></script>
     <!-- Main Script -->
     <script src="adminassets/js/main.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
     const nameInput = document.getElementById('product_name');
@@ -295,7 +379,7 @@ function validateForm() {
     const isValidPrice = validateInput('regular_price', /^\d+(\.\d{1,2})?$/, 'priceError', 'Price');
     const isValidDiscountPrice = validateInput('discount_price', /^\d+(\.\d{1,2})?$/, 'discountPriceError', 'Discount Price');
     const isValidStock = validateInput('stock_count', /^(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-9]{2}|300)$/, 'stockError', 'Stock');
-    const isValidCategory = validateCategory(); // Validate category
+    const isValidCategory = validateCategory(); 
 
     if (!isValidName || !isValidDescription || !isValidPrice || !isValidDiscountPrice || !isValidStock || !isValidCategory) {
         document.getElementById('mainError').innerText = 'Cannot submit form. Please Enter valid inputs.';
@@ -359,9 +443,6 @@ function validateCategory() {
     }
 }
 
-    </script>
-    
-        
+</script>
 </body>
-
 </html>
