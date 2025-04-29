@@ -196,14 +196,6 @@
                                         <%}}%>
                                         <div id="categoryError" class="text-danger"></div> <!-- Placeholder for category error -->
                                 </div>
-                            
-                                <!-- Media Section for Images -->
-                                <!-- <div class="mb-4">
-                                    <label for="product_images" class="form-label">Images</label>
-                                    <input type="file" class="form-control" name="images[]" id="product_images" accept="image/*" multiple>
-                                    <small class="form-text text-muted">You can select multiple images(3 only).</small>
-                                    <p id="imagesError" class="text-danger"></p> <!-- Placeholder for images error
-                                </div> -->
 
                                 <!-- Media Section for Images -->
                                 <div class="mb-4">
@@ -301,7 +293,7 @@
     }
 
     function skipImage() {
-        croppedImages.push(imageQueue[currentImageIndex]); // Keep original if skipped
+        croppedImages.push(imageQueue[currentImageIndex]); 
         nextImage();
     }
 
@@ -319,7 +311,6 @@
         document.getElementById("cropModal").style.display = "none";
         if (cropper) cropper.destroy();
 
-        // Create new FileList from croppedImages and set to input
         const dataTransfer = new DataTransfer();
         croppedImages.forEach(file => {
             dataTransfer.items.add(file);

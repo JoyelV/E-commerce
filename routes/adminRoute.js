@@ -18,17 +18,39 @@ admin_route.use((req,res,next)=>{
 const multer = require("multer"); 
 const path = require('path');
 
-const storage=multer.diskStorage({
-  destination:function(req,file,cb){
-    cb(null,'./public/productImages');
+// const storage=multer.diskStorage({
+//   destination:function(req,file,cb){
+//     cb(null,'./public/productImages');
   
-  },
-  filename:function(req,file,cb){
-    cb(null,file.originalname);
-  }
-  });
+//   },
+//   filename:function(req,file,cb){
+//     cb(null,file.originalname);
+//   }
+//   });
 
-const upload=multer({storage:storage}).array('images', 3);
+// const upload=multer({storage:storage}).array('images', 3);
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null,'./public/productImages');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    },
+});
+const upload = multer({
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        const filetypes = /jpeg|jpg|png|gif|webp/;
+        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+        const mimetype = filetypes.test(file.mimetype);
+        if (extname && mimetype) {
+            return cb(null, true);
+        } else {
+            cb('Error: Images only!');
+        }
+    },
+});
 
 const auth = require("../middleware/adminAuth");
 const adminController = require("../controllers/adminController");
@@ -63,11 +85,12 @@ admin_route.get('/restore-cate', auth.isLogin, categoryController.restoreCategor
 // product managment
 admin_route.get('/product',auth.isLogin,productController.loadProduct);
 admin_route.get('/add-product',productController.addProductpage);
-admin_route.post('/add-product',upload,productController.addProduct);
+// admin_route.post('/add-product',upload,productController.addProduct);
+admin_route.post('/add-product',upload.array('images', 3),productController.addProduct);
 admin_route.get('/delete', auth.isLogin, productController.deleteProduct);
 admin_route.get('/restore', auth.isLogin, productController.restoreProduct);
 admin_route.get('/editproduct',auth.isLogin,productController.loadEdit);
-admin_route.post('/editproduct',upload,productController.editProduct);
+admin_route.post('/editproduct',upload.array('images', 3),productController.editProduct);
 admin_route.get('/search',productController.searchProductView);
 
 //stock management

@@ -7,6 +7,9 @@ const wishlistModel = require("../models/wishlistModel")
 const { TopologyDescription } = require("mongodb");
 const ProductOfferModel = require("../models/productOfferModel");
 const CategoryOfferModel = require("../models/categoryOfferModel");
+const mongoose = require('mongoose');
+const path = require('path');
+const fs = require('fs').promises;
 
 const loadProduct = async (req, res) => {
     try {
@@ -79,44 +82,141 @@ const addProductpage = async(req,res)=>{
     }
 }
 
-const addProduct = async (req, res) => {
-    console.log("hii from backend")
-    try {  
-        if (!req.body.name || !req.body.description || !req.body.brand || !req.body.gender || !req.body.stock || !req.body.category || !req.body.price || !req.body.discountPrice || !req.files) {
-            return res.redirect('/admin/product'); 
+// Utility function to validate inputs
+const validateProductData = (data) => {
+    const errors = [];
+
+    if (!data.name || !/^[A-Za-z0-9.,\s]+$/.test(data.name.trim())) {
+        errors.push('Product name is required and must contain only letters, numbers, spaces, commas, or periods.');
+    }
+
+    if (!data.description || !/^\s*[A-Z][\s\S]{13,}$/.test(data.description.trim())) {
+        errors.push('Description must start with a capital letter and be at least 14 characters long.');
+    }
+
+    if (!data.brand || !/^[A-Za-z0-9.,\s]+$/.test(data.brand.trim())) {
+        errors.push('Brand name is required and must contain only letters, numbers, spaces, commas, or periods.');
+    }
+
+    if (!data.gender || !/^[A-Za-z0-9.,\s]+$/.test(data.gender.trim())) {
+        errors.push('Gender is required and must contain only letters, numbers, spaces, commas, or periods.');
+    }
+
+    const price = parseFloat(data.price);
+    if (!data.price || isNaN(price) || price <= 0 || !/^\d+(\.\d{1,2})?$/.test(data.price)) {
+        errors.push('Price must be a valid positive number with up to two decimal places.');
+    }
+
+    const discountPrice = parseFloat(data.discountPrice);
+    if (!data.discountPrice || isNaN(discountPrice) || discountPrice < 0 || !/^\d+(\.\d{1,2})?$/.test(data.discountPrice)) {
+        errors.push('Discount price must be a valid non-negative number with up to two decimal places.');
+    }
+    if (discountPrice >= price) {
+        errors.push('Discount price must be less than the regular price.');
+    }
+
+    const stock = parseInt(data.stock, 10);
+    if (!data.stock || isNaN(stock) || stock < 0 || stock > 300) {
+        errors.push('Stock must be a number between 0 and 300.');
+    }
+
+    if (!data.category || !mongoose.Types.ObjectId.isValid(data.category)) {
+        errors.push('A valid category is required.');
+    }
+
+    return errors;
+};
+
+// Utility function to validate images
+const validateImages = (files) => {
+    const errors = [];
+    const validExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    const maxFiles = 3;
+
+    if (!files || files.length === 0) {
+        errors.push('At least one image is required.');
+        return errors;
+    }
+
+    if (files.length > maxFiles) {
+        errors.push(`You can upload a maximum of ${maxFiles} images.`);
+        return errors;
+    }
+
+    files.forEach((file, index) => {
+        const extension = path.extname(file.originalname).toLowerCase().slice(1);
+        if (!validExtensions.includes(extension)) {
+            errors.push(`Image ${index + 1} must be a valid image file (jpg, jpeg, png, gif, webp).`);
         }
-               
-        const images = req.files ? req.files.map(file => file.filename) : [];
+    });
 
-        const value = await productModel.countDocuments({ name: req.body.name, category: req.body.category });
+    return errors;
+};
 
-        if(value==0){
+const addProduct = async (req, res) => {
+    try {
+        const validationErrors = validateProductData(req.body);
+        const imageErrors = validateImages(req.files);
+
+        if (validationErrors.length > 0 || imageErrors.length > 0) {
+            const categoryDetails = await categoryModel.find();
+            return res.render('add-product', {
+                category: categoryDetails,
+                message: [...validationErrors, ...imageErrors].join(' '),
+            });
+        }
+
+        const existingProduct = await productModel.findOne({
+            name: { $regex: new RegExp(`^${req.body.name.trim()}$`, 'i') },
+            category: req.body.category,
+        });
+
+        if (existingProduct) {
+            const categoryDetails = await categoryModel.find();
+            return res.render('add-product', {
+                category: categoryDetails,
+                message: 'A product with the same name and category already exists.',
+            });
+        }
+
+        const images = req.files.map(file => file.filename);
 
         const product = new productModel({
-            name: req.body.name,
-            description: req.body.description,
-            brand:req.body.brand,
-            gender: req.body.gender,
+            name: req.body.name.trim(),
+            description: req.body.description.trim(),
+            brand: req.body.brand.trim(),
+            gender: req.body.gender.trim(),
             images: images,
-            countInStock: req.body.stock,
+            countInStock: parseInt(req.body.stock, 10),
             category: req.body.category,
-            price: req.body.price,
-            discountPrice: req.body.discountPrice,
+            price: parseFloat(req.body.price),
+            discountPrice: parseFloat(req.body.discountPrice),
         });
 
         const savedProduct = await product.save();
-        
+
         if (savedProduct) {
-            res.redirect('/admin/product');
+            return res.redirect('/admin/product?success=Product added successfully');
+        } else {
+            throw new Error('Failed to save product.');
         }
-    }
-      else{
-        const categoryDetails = await categoryModel.find();
-        res.render('add-product', { category: categoryDetails,message:"Product with same category exists"});
-      }
     } catch (error) {
         console.error('Error saving product:', error);
-        res.status(500).send('Error saving product.');
+
+        if (req.files) {
+            req.files.forEach(file => {
+                const filePath = path.join(__dirname, './public/productImages', file.filename); 
+                fs.unlink(filePath, err => {
+                    if (err) console.error('Error deleting file:', err);
+                });
+            });
+        }
+
+        const categoryDetails = await categoryModel.find();
+        return res.render('add-product', {
+            category: categoryDetails,
+            message: 'An error occurred while saving the product. Please try again.',
+        });
     }
 };
 
@@ -139,50 +239,72 @@ const loadEdit = async (req, res) => {
     }
 };
 
-
 const editProduct = async (req, res) => {
     try {
-        let existingImages = [];
         let existingProduct = await productModel.findById(req.query.id);
-        
         const categorydetails = await categoryModel.find();
-        
-        if (existingProduct && existingProduct.images && Array.isArray(existingProduct.images)) {
-            existingImages = existingProduct.images;
-        }
-        console.log(req.body);
-        let newImages = [];
 
+        if (!existingProduct) {
+            return res.status(404).send('Product not found');
+        }
+
+        let existingImages = existingProduct.images && Array.isArray(existingProduct.images) ? existingProduct.images : [];
+
+        if (req.query.delete) {
+            const imageToDelete = req.query.delete;
+            if (existingImages.includes(imageToDelete)) {
+                existingImages = existingImages.filter(img => img !== imageToDelete);
+                const imagePath = path.join(__dirname, '../public/productImages', imageToDelete);
+                try {
+                    await fs.unlink(imagePath);
+                } catch (err) {
+                    console.warn(`Failed to delete image file ${imagePath}:`, err.message);
+                }
+                await productModel.findByIdAndUpdate(req.query.id, { $set: { images: existingImages } });
+                return res.redirect(`/admin/editproduct?id=${req.query.id}`);
+            }
+        }
+
+        let newImages = [];
         if (req.files && req.files.length) {
             newImages = req.files.map(file => file.filename);
         }
- 
+
         const allImages = existingImages.concat(newImages);
 
         if (allImages.length > 3) {
-            return res.render('editProduct', { catData: categorydetails, proData: existingProduct, message: 'Maximum 3 images per product' });
-        } else {
-            
-            const updatedProduct = await productModel.findByIdAndUpdate(req.query.id, {
+            return res.render('editProduct', {
+                catData: categorydetails,
+                proData: existingProduct,
+                message: 'Maximum 3 images per product'
+            });
+        }
+
+        const updatedProduct = await productModel.findByIdAndUpdate(
+            req.query.id,
+            {
                 $set: {
                     name: req.body.name,
                     description: req.body.description,
                     images: allImages,
-                    brand:req.body.brand,
+                    brand: req.body.brand,
                     gender: req.body.gender,
                     category: req.body.category,
                     price: req.body.price,
                     discountPrice: req.body.discountPrice,
                     countInStock: req.body.stock,
                 }
-            }, { new: true }); 
+            },
+            { new: true }
+        );
 
-            if (updatedProduct) {
-                return res.redirect('/admin/product');
-            }
+        if (updatedProduct) {
+            return res.redirect('/admin/product');
+        } else {
+            return res.status(500).send('Failed to update product');
         }
     } catch (error) {
-        console.log('update product:', error.message);
+        console.error('Update product error:', error.message);
         res.status(500).send('An error occurred');
     }
 };
