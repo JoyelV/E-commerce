@@ -1,103 +1,123 @@
 const express = require("express");
-const bodyParser = require("body-parser");
-const user_route = express();
+const userRouter = express.Router(); 
 
+// Middlewares
 const auth = require("../middleware/userAuth");
+
+// Controllers
 const userController = require("../controllers/userController");
 const productController = require("../controllers/productController");
 const cartController = require("../controllers/cartController");
 const checkoutController = require("../controllers/checkoutController");
 const wishlistController = require("../controllers/wishlistController");
 
-user_route.use(express.static('public'));
-user_route.set('view engine', 'ejs');
-user_route.set('views', './views/users');
+// Body parsing middleware
+userRouter.use(express.json());
+userRouter.use(express.urlencoded({ extended: true }));
+// Static files
+userRouter.use(express.static('public'));
 
-user_route.use(bodyParser.json());
-user_route.use(bodyParser.urlencoded({ extended: true }));
-
-user_route.use((req,res,next)=>{
-    res.set('Cache-Control','no-store,no-cache,must-revalidate,private');
-    next();
+// Disable caching
+userRouter.use((req, res, next) => {
+  res.set('Cache-Control', 'no-store,no-cache,must-revalidate,private');
+  next();
 });
 
-// for user registration
-user_route.get('/register', auth.isLogout, userController.loadRegister);
-user_route.post('/register',userController.insertUser);
+// -------------------- Authentication Routes --------------------
+userRouter.route('/register')
+  .get(auth.isLogout, userController.loadRegister)
+  .post(userController.insertUser);
 
-// for verify user
-user_route.get('/verifyOTP',auth.isLogout,userController.loadOtp);
-user_route.post('/verifyOTP',userController.getOtp);
-user_route.post('/resendotp',userController.resendOtp);
+userRouter.route('/verify-otp')
+  .get(auth.isLogout, userController.loadOtp)
+  .post(userController.getOtp);
 
-//for Guest user experience
-user_route.get('/',auth.isLogout,userController.loadLandPage);
-user_route.get('/landPage',auth.isLogout,userController.loadLandPage);
+userRouter.post('/resend-otp', userController.resendOtp);
+userRouter.get(['/', '/landPage'], auth.isLogout, userController.loadLandPage);
 
-// for user login
-user_route.get('/login', auth.isLogout, userController.loginLoad);
-user_route.post('/login', userController.verifyLogin);
+userRouter.route('/login')
+  .get(auth.isLogout, userController.loginLoad)
+  .post(userController.verifyLogin);
 
-// for product Listing
-user_route.get('/home',userController.loadHome);
-user_route.get('/shop',productController.loadShop); 
-user_route.get('/mens',productController.loadMenShop); 
-user_route.get('/women',productController.loadWomenShop); 
+userRouter.get('/logout', auth.isLogin, userController.userLogout);
 
-//for product Details
-user_route.get('/productDetails',productController.loadProductPage); 
-user_route.post('/productDetails',auth.isLogin,productController.reviewProduct); 
+// -------------------- Product Routes --------------------
+userRouter.get('/home', userController.loadHome);
+userRouter.get('/shop', productController.loadShop);
+userRouter.get('/mens', productController.loadMenShop);
+userRouter.get('/women', productController.loadWomenShop);
 
-user_route.get('/logout', auth.isLogin,userController.userLogout);
+userRouter.route('/product-details')
+  .get(productController.loadProductPage)
+  .post(auth.isLogin, productController.reviewProduct);
 
-//for forgot password
-user_route.get('/forget-password', auth.isLogout, userController.forgetPasswordLoad);
-user_route.post('/forget-password', userController.resetPassword);
-user_route.get('/forget', auth.isLogout,userController.forgetLoad);
-user_route.post('/forget', userController.forgetverify);
-user_route.post('/reset-password', userController.resetPassword);
+// -------------------- Password Routes --------------------
+userRouter.route('/forgot-password')
+  .get(auth.isLogout, userController.forgetPasswordLoad)
+  .post(userController.resetPassword);
 
-//for user profile and address
-user_route.get('/userprofile',auth.isLogin,userController.loaduserprofile);
-user_route.post('/userprofile',userController.editprofile)
-user_route.get('/addaddress',auth.isLogin,userController.loadaddaddress);
-user_route.post('/addaddress',userController.addAddress);
-user_route.get('/editaddress',auth.isLogin,userController.loadeditAddress);
-user_route.post('/editaddress',userController.editAddress)
-user_route.get('/deleteaddress',auth.isLogin,userController.deleteAddress);
+userRouter.route('/forgot')
+  .get(auth.isLogout, userController.forgetLoad)
+  .post(userController.forgetverify);
 
-// for cart 
-user_route.get('/cart',auth.isLogin,cartController.loadAndShowCart);
-user_route.get('/addCouponToCart', auth.isLogin,cartController.addCouponToCart);
-user_route.get('/removeCouponFromCart', auth.isLogin,cartController.removeCouponFromCart);
-user_route.post('/add-to-cart',auth.isLogin,cartController.addTocart);
-user_route.post('/increaseQty',auth.isLogin,cartController.increaseQuantity);
-user_route.post('/decreaseQty',auth.isLogin,cartController.decreaseQuantity);
-user_route.post('/cart-delete',auth.isLogin,cartController.deleteCart);
+userRouter.post('/reset-password', userController.resetPassword);
 
-// for checkout
-user_route.get('/checkout',auth.isLogin,checkoutController.loadcheckout);
-user_route.post('/checkout',auth.isLogin,checkoutController.Postcheckout);
-user_route.post("/updatepayment",auth.isLogin,checkoutController.updatepaymentStatus);
-user_route.post("/repayAmount",auth.isLogin,checkoutController.repayAmountNow);
+// -------------------- Profile & Address --------------------
+userRouter.route('/user-profile')
+  .get(auth.isLogin, userController.loadUserProfile)
+  .post(auth.isLogin,userController.editProfile);
 
-// for order
-user_route.get('/orderconfirmed',auth.isLogin,checkoutController.loadorderconfirmed);
-user_route.get('/orderdetails',auth.isLogin,checkoutController.loadorderdetails);
-user_route.post('/cancelOrder',auth.isLogin,userController.cancelOrder);
-user_route.post('/returnOrder',auth.isLogin,userController.returnOrder);
+userRouter.route('/add-address')
+  .get(auth.isLogin, userController.loadAddAddress)
+  .post(auth.isLogin,userController.addAddress);
 
-//for wishlist
-user_route.get('/wishlist',auth.isLogin,wishlistController.loadWishlist);
-user_route.get('/addtowishlist',auth.isLogin,wishlistController.addToWishlist);
-user_route.get('/removeWishlist',auth.isLogin,wishlistController.removeWishlist);
+userRouter.route('/edit-address')
+  .get(auth.isLogin, userController.loadEditAddress)
+  .post(auth.isLogin,userController.editAddress);
 
-//for refferal offer
-user_route.get("/refferals", auth.isLogin,userController.getRefferals);
-user_route.post('/add-to-wallet', userController.rewardRefferalToWallet);
+userRouter.post('/delete-address', auth.isLogin, userController.deleteAddress);
 
-//for invoice
-user_route.get("/loadInvoice",auth.isLogin,userController.loadInvoice)
-user_route.get('/pdf',auth.isLogin,checkoutController.invoice);
+// -------------------- Cart --------------------
+userRouter.get('/cart', auth.isLogin, cartController.loadAndShowCart);
+userRouter.get('/cart/add-coupon', auth.isLogin, cartController.addCouponToCart);
+userRouter.get('/cart/remove-coupon', auth.isLogin, cartController.removeCouponFromCart);
+userRouter.post('/cart/add', auth.isLogin, cartController.addTocart);
+userRouter.post('/cart/increase', auth.isLogin, cartController.increaseQuantity);
+userRouter.post('/cart/decrease', auth.isLogin, cartController.decreaseQuantity);
+userRouter.post('/cart/delete', auth.isLogin, cartController.deleteCart);
 
-module.exports = user_route;
+// -------------------- Checkout --------------------
+userRouter.route('/checkout')
+  .get(auth.isLogin, checkoutController.loadCheckout)
+  .post(auth.isLogin, checkoutController.postCheckout);
+
+userRouter.post('/checkout/update-payment', auth.isLogin, checkoutController.updatepaymentStatus);
+userRouter.post('/checkout/repay', auth.isLogin, checkoutController.repayAmountNow);
+
+// -------------------- Orders --------------------
+userRouter.get('/order-confirmed', auth.isLogin, checkoutController.loadOrderConfirmed);
+userRouter.get('/order-details', auth.isLogin, checkoutController.loadOrderDetails);
+
+userRouter.post('/order/cancel', auth.isLogin, userController.cancelOrder);
+userRouter.post('/order/return', auth.isLogin, userController.returnOrder);
+
+// -------------------- Wishlist --------------------
+userRouter.get('/wishlist', auth.isLogin, wishlistController.loadWishlist);
+userRouter.get('/wishlist/add', auth.isLogin, wishlistController.addToWishlist);
+userRouter.get('/wishlist/remove', auth.isLogin, wishlistController.removeWishlist);
+
+// -------------------- Referrals --------------------
+userRouter.get('/referrals', auth.isLogin, userController.getReferrals);
+userRouter.post('/wallet/reward-referral',auth.isLogin,userController.rewardReferralToWallet);
+
+// -------------------- Invoice --------------------
+userRouter.get('/invoice', auth.isLogin, userController.loadInvoice);
+userRouter.get('/invoice/pdf', auth.isLogin, checkoutController.invoice);
+
+// -------------------- Error Handling --------------------
+userRouter.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).render('error', { message: 'Something went wrong!' });
+});
+
+module.exports = userRouter; 

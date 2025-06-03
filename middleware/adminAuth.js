@@ -10,7 +10,7 @@ const isLogin = async (req, res, next) => {
                 next();
             } 
         } else {
-            res.redirect('/admin');
+            return res.redirect('/admin');
         }
     } catch (error) {
         console.error("Error in isLogin middleware:", error);
@@ -21,7 +21,7 @@ const isLogin = async (req, res, next) => {
 const isLogout = async(req,res,next)=>{
     try{
         if(req.session.user_id){
-         res.redirect("/admin/home");
+         return res.redirect("/admin/home");
         }
         next();
 

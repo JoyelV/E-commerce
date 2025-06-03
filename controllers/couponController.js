@@ -1,22 +1,18 @@
 const {couponModel} = require('../models/couponModel');
-const cartModel = require('../models/cartModel');
-const User=require('../models/userModel');
-const { logout } = require('./adminController');
 
 const listCoupons = async (req, res) => {
     try {
         const coupons = await couponModel.find({});
-       res.render('listCoupon',{coupons})
+       res.render('admin/listCoupon',{coupons})
     } catch (error) {
         console.error("Error listing coupons:", error.message);
         res.status(500).json({ success: false, message: "Error listing coupons." });
     }
 };
 
-
 const loadcreatecoupon = async(req,res)=>{
     try{
-        res.render('createCoupon');
+        res.render('admin/createCoupon');
     }catch(error){
         console.log(error.message);
     }
@@ -61,7 +57,6 @@ const createCoupon = async (req, res) => {
 const deleteCouponStatus = async (req, res) => {
     try {
         const { couponId } = req.body;
-        // await couponModel.findByIdAndUpdate(couponId, { isActive: isActive });
         await couponModel.findByIdAndDelete(couponId);
         res.status(200).json({ success: true, message: "Coupon deleted successfully." });
 
@@ -70,7 +65,6 @@ const deleteCouponStatus = async (req, res) => {
         res.status(500).json({ success: false, message: "Failed to toggle coupon status." });
     }
 };
-
 
 module.exports = {
     loadcreatecoupon,

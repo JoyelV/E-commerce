@@ -22,7 +22,7 @@ const loadCategoryOfferPage = async(req, res, next)=>{
       $unwind: "$categoryDetails" 
     }
   ])  
-  res.render("categoryOffer",{categoryOfferData})
+  res.render("admin/categoryOffer",{categoryOfferData})
   
  } catch (error) {
   console.error("Error in loadCategoryOfferPage: ", error);
@@ -61,7 +61,7 @@ const loadProductOfferPage = async(req, res, next)=>{
       }
     ])
   
-    res.render("productOffer",{productOfferData});
+    res.render("admin/productOffer",{productOfferData});
     
   } catch (error) {
     console.error("Error in loadProductOfferPage: ", error);
@@ -86,7 +86,7 @@ try {
 
     }
 }
-  res.render("addProductOffer",{productData});
+  res.render("admin/addProductOffer",{productData});
   
 } catch (error) {
   console.error("Error in loadAddProductOffer: ",error);
@@ -111,7 +111,7 @@ const loadAddCategoryOffer = async(req, res, error)=>{
           categoryData[i].offerStatus = false;
       }
   }
-    res.render("addCategoryOffer",{categoryData})
+    res.render("admin/addCategoryOffer",{categoryData})
       
     } catch (error) {
       console.error("Error in loadAddCateogoryOffer: ",error);
@@ -141,8 +141,7 @@ const addingProductOffer = async (req, res, next) => {
     });
 
     await newProductOffer.save();
-
-    res.redirect("/admin/loadAddProductOffer")
+    res.redirect("/admin/product-offers")
 
   } catch (error) {
     console.error('Error in addingproduct offer:', error);
@@ -172,64 +171,158 @@ const addCategoryOffer = async (req, res,  next) => {
     });
 
     await newCategoryOffer.save();
-    res.redirect("/admin/loadAddCategoryOffer")
+    res.redirect("/admin/category-offers/create")
   } catch (error) {
     console.error('Error saving addcategory offer:', error);
     next(error);
   }
 };
 
-const deleteProductOffer = async(req, res)=>{
+const deleteProductOffer = async (req, res) => {
   try {
     const prodId = req.params.id;
-    console.log("productid in delete",prodId);
-    const value = await ProductOfferModel.findByIdAndUpdate(prodId, { 'productOffer.offerStatus': false });
-    console.log("productOfferModel:",value.productOffer.offerStatus);
-    res.redirect('/admin/loadProductOffer');
-    
+    console.log("productid in delete", prodId);
+    const productOffer = await ProductOfferModel.findById(prodId);
+    if (!productOffer) {
+      console.log("Product offer not found for ID:", prodId);
+      return res.status(404).json({ message: "Product offer not found", success: false });
+    }
+
+    const updatedOffer = await ProductOfferModel.findByIdAndUpdate(
+      prodId,
+      { $set: { 'productOffer.offerStatus': false } }, 
+      { new: true, runValidators: true }
+    );
+
+    console.log("productOfferModel:", updatedOffer.productOffer.offerStatus);
+    return res.status(200).json({ message: "Product offer deleted successfully", success: true });
   } catch (error) {
-    console.error("Error in deleteProductOffer: ", error);    
-   }
-}
+    console.error("Error in deleteProductOffer:", error);
+    return res.status(500).json({ message: "Internal server error", success: false });
+  }
+};
 
-const restoreProductOffer = async(req,res)=>{
-    try {
-      const prodId = req.params.id;
-      console.log("productid in restore",prodId);
-      const value = await ProductOfferModel.findByIdAndUpdate(prodId, { 'productOffer.offerStatus': true });
-      console.log("productOfferModel:",value.productOffer.offerStatus);
-      res.redirect('/admin/loadProductOffer');
-      
-    } catch (error) {
-      console.error("Error in restoreProductOffer: ", error);    
-     }
-}
-
-const deleteCategoryOffer = async(req, res)=>{
+const restoreProductOffer = async (req, res) => {
   try {
-    const { id } = req.query;
-    console.log("categoryid:",id);
-    const value = await categoryOffer.findByIdAndUpdate(id, { is_active: false });
-    console.log("value",value);
-    res.redirect('/admin/loadCategoryOffer');
-    
-  } catch (error) {
-    console.log(error.message);
-  }                         
-}
+    const prodId = req.params.id;
+    console.log("productid in restore:", prodId);
+    const productOffer = await ProductOfferModel.findById(prodId);
+    if (!productOffer) {
+      return res.status(404).json({ message: "Product offer not found", success: false });
+    }
 
-const restoreCategoryOffer = async(req, res)=>{
-  try {
-    const { id } = req.query;
-    console.log("categoryid:",id);
-    const value = await categoryOffer.findByIdAndUpdate(id, { is_active: true });
-    console.log("value",value);
-    res.redirect('/admin/loadCategoryOffer');
-    
+    const updatedOffer = await ProductOfferModel.findByIdAndUpdate(
+      prodId,
+      { $set: { 'productOffer.offerStatus': true } }, 
+      { new: true, runValidators: true }
+    );
+
+    console.log("productOfferModel:", updatedOffer.productOffer.offerStatus);
+    return res.status(200).json({ message: "Product offer restored successfully", success: true });
   } catch (error) {
-    console.log(error.message);
-  }                         
-}
+    console.error("Error in restoreProductOffer:", error);
+    return res.status(500).json({ message: "Internal server error", success: false });
+  }
+};
+
+const updateCategoryOffer = async (req, res, next) => {
+  try {
+    const offerId = req.params.id;
+    const { name, startingDate, endingDate, category, categoryDiscount } = req.body;
+
+    if (!name || !startingDate || !endingDate || !category || !categoryDiscount) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    const updateOffer = await categoryOffer.updateOne(
+      { _id: new ObjectId(offerId) },
+      {
+        $set: {
+          name,
+          startingDate: new Date(startingDate),
+          endingDate: new Date(endingDate),
+          'categoryOffer.discount': Number(categoryDiscount),
+          'categoryOffer.category': new ObjectId(category)
+        }
+      }
+    );
+
+    if (updateOffer.modifiedCount === 1) {
+      return res.status(200).json({ 
+        success: true, 
+        message: 'Category offer updated successfully',
+        redirect: '/admin/category-offers'
+      });
+    } else {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Category offer not found or no changes made',
+        redirect: '/admin/category-offers'
+      });
+    }
+  } catch (error) {
+    console.error("Error in updateCategoryOffer:", error);
+    next(error);
+  }
+};
+
+const deleteCategoryOffer = async (req, res, next) => {
+  try {
+    const offerId = req.params.id;
+    
+    const result = await categoryOffer.findByIdAndUpdate(
+      new ObjectId(offerId),
+      { is_active: false },
+      { new: true }
+    );
+
+    if (!result) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Category offer not found',
+        redirect: '/admin/category-offers'
+      });
+    }
+
+    return res.status(200).json({ 
+      success: true, 
+      message: 'Category offer deactivated successfully',
+      redirect: '/admin/category-offers'
+    });
+  } catch (error) {
+    console.error("Error in deleteCategoryOffer:", error);
+    next(error);
+  }
+};
+
+const restoreCategoryOffer = async (req, res, next) => {
+  try {
+    const offerId = req.params.id;
+    
+    const result = await categoryOffer.findByIdAndUpdate(
+      new ObjectId(offerId),
+      { is_active: true },
+      { new: true }
+    );
+
+    if (!result) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Category offer not found',
+        redirect: '/admin/category-offers'
+      });
+    }
+
+    return res.status(200).json({ 
+      success: true, 
+      message: 'Category offer restored successfully',
+      redirect: '/admin/category-offers'
+    });
+  } catch (error) {
+    console.error("Error in restoreCategoryOffer:", error);
+    next(error);
+  }
+};
 
 const loadEditProductOffer = async (req, res, next)=>{
   try {
@@ -260,12 +353,13 @@ const loadEditProductOffer = async (req, res, next)=>{
           productData[i].offerStatus = false
       }
   }
-    res.render("editProductOffer",{prdOfferData, productData}) 
+    res.render("admin/editProductOffer",{prdOfferData, productData}) 
   } catch (error) {
     console.error("Error in loadEditProductOffer : ",error);
     next(error); 
   }
 }
+
 const loadEditCategoryOffer = async(req, res, next)=>{
 try {
   const categoryData = await category.find({}, { name: 1 }).lean();
@@ -292,7 +386,7 @@ try {
       categoryData[i].offerStatus = false;
   }
 }
-  res.render("editCategoryOffer",{categoryData, offerDetails})
+  res.render("admin/editCategoryOffer",{categoryData, offerDetails})
   
 } catch (error) {
   console.error("Error in loadEditCategoryOffer: ", error);
@@ -319,48 +413,15 @@ const updateProductOffer = async(req, res, next)=>{
   )
 
   if(updateOffer.modifiedCount === 1){
-        res.redirect('/admin/loadProductOffer')
+        res.redirect('/admin/product-offers')
   }else{
         console.log("offer is not updated")
-        res.redirect("/admin/loadProductOffer")
+        res.redirect("/admin/product-offers")
   }                                            
-
   } catch (error) {
     console.error("Error in updateProductOffer: ", error);
     next(error);
   }
-
-}
-
-const updateCategoryOffer = async(req, res, next)=>{
-try {
-  const offerId = req.query.catId
-  const {name, startingDate, endingDate, category, categoryDiscount} = req.body;
-
-  const updateOffer = await categoryOffer.updateOne(
-    {_id:new ObjectId(offerId)},
-    {
-      $set: {
-        "name": name,
-        "startingDate": new Date(startingDate), 
-        "endingDate": new Date(endingDate), 
-        "categoryOffer.discount": categoryDiscount,
-        "categoryOffer.category": new ObjectId(category)
-      }
-    }
-    )
-    if(updateOffer.modifiedCount === 1){
-    res.redirect('/admin/loadCategoryOffer')
-    }else{
-        console.log("offer is not updated")
-        res.redirect("/admin/loadCategoryOffer")
-    }      
-
-} catch (error) {
-  console.error("Error in updateCategoryOffer: ", error);
-  next(error)
-  
-}  
 }
 
 module.exports = {

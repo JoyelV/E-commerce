@@ -1,82 +1,84 @@
 const productModel = require("../models/productModel");
 const categoryModel = require('../models/categoryModel');
 const userModel = require('../models/userModel');
-const Review = require('../models/reviewModel');
+const reviewModel = require('../models/reviewModel');
 const orderModel = require("../models/orderModel")
 const wishlistModel = require("../models/wishlistModel")
-const { TopologyDescription } = require("mongodb");
-const ProductOfferModel = require("../models/productOfferModel");
-const CategoryOfferModel = require("../models/categoryOfferModel");
+const productOfferModel = require("../models/productOfferModel");
+const categoryOfferModel = require("../models/categoryOfferModel");
 const mongoose = require('mongoose');
 const path = require('path');
 const fs = require('fs').promises;
 
 const loadProduct = async (req, res) => {
     try {
-        let query = req.query.q;
-        if (/^([a-zA-Z\d])\1*[\W\d]*$/.test(query)) {
+        // Handle query parameter
+        let query = req.query.q || '';
+        if (!query || /^([a-zA-Z\d])\1*[\W\d]*$/.test(query) || /^[\*\W\d]+$/.test(query)) {
             query = 'all';
-        } 
-        if (/^[\*\W\d]+$/.test(query)) {
-            query = 'all';
-        } 
-        if(query === 'all'){
-            const page = parseInt(req.query.page) || 1; 
-            const limit = 5; 
-            query = {};
-            const totalProductsCount = await productModel.countDocuments();
-            const totalPages = Math.ceil(totalProductsCount / limit);
-    
-            if (page < 1 || page > totalPages) {
-                return res.status(404).send('Page not found');
-            }
-    
-            const skip = (page - 1) * limit;
-    
-            const productdetails = await productModel.find(query).populate('category').skip(skip).limit(limit);
-            const categorydetails = await categoryModel.find();
-    
-            res.render('view-product', { query, product: productdetails, category: categorydetails, totalPages, currentPage: page });
         }
-        else{
-        const query = req.query.q; 
 
-        const page = parseInt(req.query.page) || 1; 
-        const limit = 5; 
-    
-        const totalProductsCount = await productModel.countDocuments();
-        const totalPages = Math.ceil(totalProductsCount / limit);
-    
-        if (page < 1 || page > totalPages) {
-                return res.status(404).send('Page not found');
-        }
-    
+        const page = parseInt(req.query.page) || 1;
+        const limit = 5;
         const skip = (page - 1) * limit;
 
-        const category = await categoryModel.find({});
+        let products, totalProductsCount, totalPages;
 
-        const products = await productModel.find({ 
-          $and: [
-            { is_deleted: false }, 
-            { $or: [ 
-              { name: { $regex: new RegExp(query, 'i') } }, 
-              { brand: { $regex: new RegExp(query, 'i') } } 
-            ] }
-          ]
-        }).populate('category').skip(skip).limit(limit); 
-    
-        res.render('view-product', { query,product: products, category: category, totalPages, currentPage: page });
+        if (query === 'all') {
+            // Fetch all products
+            totalProductsCount = await productModel.countDocuments();
+            totalPages = Math.ceil(totalProductsCount / limit);
+
+            if (page < 1 || (totalPages > 0 && page > totalPages)) {
+                return res.status(404).render('admin/error', { message: 'Page not found' });
+            }
+
+            products = await productModel
+                .find()
+                .populate('category')
+                .skip(skip)
+                .limit(limit);
+        } else {
+            const searchQuery = {
+                $or: [
+                    { name: { $regex: new RegExp(query, 'i') } },
+                    { brand: { $regex: new RegExp(query, 'i') } }
+                ]
+            };
+
+            totalProductsCount = await productModel.countDocuments(searchQuery);
+            totalPages = Math.ceil(totalProductsCount / limit);
+
+            if (page < 1 || (totalPages > 0 && page > totalPages)) {
+                return res.status(404).render('admin/error', { message: 'Page not found' });
+            }
+
+            products = await productModel
+                .find(searchQuery)
+                .populate('category')
+                .skip(skip)
+                .limit(limit);
+        }
+
+        const categorydetails = await categoryModel.find();
+        res.render('admin/viewProduct', {
+            query,
+            product: products,
+            category: categorydetails,
+            totalPages,
+            currentPage: page
+        });
+    } catch (error) {
+        console.error('Error in loadProduct:', error.message);
+        res.status(500).render('admin/error', { message: 'An error occurred while loading products. Please try again.' });
     }
-    }catch(error){
-        console.log(error.message);
-    }
-}
+};
 
 const addProductpage = async(req,res)=>{
     try{
         const categorydetails = await categoryModel.find({ is_active: true });
 
-        res.render('add-product', { category: categorydetails});
+        res.render('admin/addProduct', { category: categorydetails});
     }catch(error){
         console.log(error.message);
     }
@@ -160,7 +162,7 @@ const addProduct = async (req, res) => {
 
         if (validationErrors.length > 0 || imageErrors.length > 0) {
             const categoryDetails = await categoryModel.find();
-            return res.render('add-product', {
+            return res.render('admin/addProduct', {
                 category: categoryDetails,
                 message: [...validationErrors, ...imageErrors].join(' '),
             });
@@ -173,7 +175,7 @@ const addProduct = async (req, res) => {
 
         if (existingProduct) {
             const categoryDetails = await categoryModel.find();
-            return res.render('add-product', {
+            return res.render('admin/addProduct', {
                 category: categoryDetails,
                 message: 'A product with the same name and category already exists.',
             });
@@ -196,7 +198,7 @@ const addProduct = async (req, res) => {
         const savedProduct = await product.save();
 
         if (savedProduct) {
-            return res.redirect('/admin/product?success=Product added successfully');
+            return res.redirect('/admin/products');
         } else {
             throw new Error('Failed to save product.');
         }
@@ -213,7 +215,7 @@ const addProduct = async (req, res) => {
         }
 
         const categoryDetails = await categoryModel.find();
-        return res.render('add-product', {
+        return res.render('admin/addProduct', {
             category: categoryDetails,
             message: 'An error occurred while saving the product. Please try again.',
         });
@@ -223,16 +225,14 @@ const addProduct = async (req, res) => {
 const loadEdit = async (req, res) => {
     try {
         const id = req.query.id;
-
         const proData = await productModel.findById(id).populate('category');
         if(req.query.delete){
             proData.images = proData.images.filter(img => img.trim() !== req.query.delete.trim());
             await proData.save();
-      
         }
         const catData = await categoryModel.find({ is_active: true });
 
-        res.render("editProduct", { catData, proData });
+        res.render("admin/editProduct", { catData, proData });
     } catch (error) {
         console.log(error.message);
         res.status(500).send('Internal Server Error');
@@ -261,7 +261,7 @@ const editProduct = async (req, res) => {
                     console.warn(`Failed to delete image file ${imagePath}:`, err.message);
                 }
                 await productModel.findByIdAndUpdate(req.query.id, { $set: { images: existingImages } });
-                return res.redirect(`/admin/editproduct?id=${req.query.id}`);
+                return res.redirect(`/admin/edit-product?id=${req.query.id}`);
             }
         }
 
@@ -273,7 +273,7 @@ const editProduct = async (req, res) => {
         const allImages = existingImages.concat(newImages);
 
         if (allImages.length > 3) {
-            return res.render('editProduct', {
+            return res.render('admin/editProduct', {
                 catData: categorydetails,
                 proData: existingProduct,
                 message: 'Maximum 3 images per product'
@@ -299,7 +299,7 @@ const editProduct = async (req, res) => {
         );
 
         if (updatedProduct) {
-            return res.redirect('/admin/product');
+            return res.redirect('/admin/products');
         } else {
             return res.status(500).send('Failed to update product');
         }
@@ -311,23 +311,41 @@ const editProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
     try {
-        const { id } = req.query;
+        const { id } = req.body; 
+        if (!id) {
+            return res.status(400).json({ success: false, message: 'Product ID is required' });
+        }
+
+        const product = await productModel.findById(id);
+        if (!product) {
+            return res.status(404).json({ success: false, message: 'Product not found' });
+        }
+
         await productModel.findByIdAndUpdate(id, { is_deleted: true });
-        res.redirect('/admin/product');
+        res.status(200).json({ success: true, message: 'Product deleted successfully' });
     } catch (error) {
-        console.log(error.message);
-        res.status(500).send('Internal Server Error');
+        console.error('Error deleting product:', error.message);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 };
 
 const restoreProduct = async (req, res) => {
     try {
-        const { id } = req.query;
+        const { id } = req.body; 
+        if (!id) {
+            return res.status(400).json({ success: false, message: 'Product ID is required' });
+        }
+
+        const product = await productModel.findById(id);
+        if (!product) {
+            return res.status(404).json({ success: false, message: 'Product not found' });
+        }
+
         await productModel.findByIdAndUpdate(id, { is_deleted: false });
-        res.redirect('/admin/product');
+        res.status(200).json({ success: true, message: 'Product restored successfully' });
     } catch (error) {
-        console.log(error.message);
-        res.status(500).send('Internal Server Error');
+        console.error('Error restoring product:', error.message);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 };
 
@@ -338,9 +356,9 @@ const loadProductPage = async(req,res)=>{
 
             const productData = await productModel.findById(id).populate('category');
             const relatedProducts = await productModel.find({ category: productData.category }).limit(4);
-            const reviewDetails = await Review.find({product:productData._id}).sort({createdAt:1}).limit(3);
+            const reviewDetails = await reviewModel.find({product:productData._id}).sort({createdAt:1}).limit(3);
 
-            const proOffer = await ProductOfferModel.aggregate([
+            const proOffer = await productOfferModel.aggregate([
                 {
                   $match: {
                     'productOffer.product': productData._id,
@@ -359,7 +377,7 @@ const loadProductPage = async(req,res)=>{
           
               const proOfferDiscount = (proOffer.length > 0) ? proOffer[0].totalDiscount : 0;
 
-              const result = await CategoryOfferModel.aggregate([
+              const result = await categoryOfferModel.aggregate([
                 {
                   $match: {
                     'categoryOffer.category': productData.category._id,
@@ -392,7 +410,7 @@ const loadProductPage = async(req,res)=>{
             console.log("isInWishlisttttt",isInWishlist);
     
             if (productData) {
-                res.render('productDetails', {
+                res.render('users/productDetails', {
                     product: productData,
                     category: productData.category.name,
                     relatedProducts,
@@ -405,7 +423,6 @@ const loadProductPage = async(req,res)=>{
                 res.redirect('/home');
             }
         } catch (error) {
-            
             console.log(error.message);
             res.status(500).send("Internal Server Error");
         }
@@ -420,16 +437,15 @@ async function isProductInWishlist(userId, productId) {
 const loadShop = async (req, res) => {
     try {
         const category = await categoryModel.find({});
-        let search = req.query.q;
-        let cate = req.query.category;
-        let sorted = req.query.sort;
+        let search = req.query.q || ''; // Default to empty string
+        let cate = req.query.category || '';
+        let sorted = req.query.sort || '';
         let query = { is_deleted: false };
 
-        console.log(search,"Hii result")
+        console.log('Query Parameters:', { search, cate, sorted });
 
-        if (req.query.q) {
-            const searchQuery = req.query.q;
-
+        if (search && search.toLowerCase() !== 'all') {
+            const searchQuery = search;
             const searchCondition = {
                 $or: [
                     { brand: { $regex: searchQuery, $options: 'i' } },
@@ -438,36 +454,32 @@ const loadShop = async (req, res) => {
             };
             query = { ...query, ...searchCondition };
         }
-        if(search ==='all'||search==='All'){
-            query = { is_deleted: false };
-        }
 
-        if (req.query.category) {
-            query.category = req.query.category;
+        if (cate) {
+            query.category = cate;
         }
 
         if (req.query.brand) {
             query.brand = req.query.brand;
         }
 
-        if (req.query.sort === 'outOfStock') {
-            query.countInStock = 0; 
-        } else if (req.query.sort === 'inStock') {
-            query.countInStock = { $gt: 0 }; 
+        if (sorted === 'outOfStock') {
+            query.countInStock = 0;
+        } else if (sorted === 'inStock') {
+            query.countInStock = { $gt: 0 };
         }
 
+        console.log('MongoDB Query:', query);
         const totalProductsCount = await productModel.countDocuments(query);
+        console.log('Total Products Count:', totalProductsCount);
 
         let sortOption = {};
-
-        switch (req.query.sort) {
+        switch (sorted) {
             case 'priceAsc':
-                sortOption = { 
-                    discountPrice: 1 };
+                sortOption = { discountPrice: 1 };
                 break;
             case 'priceDsc':
-                sortOption = { 
-                    discountPrice: -1 };
+                sortOption = { discountPrice: -1 };
                 break;
             case 'nameAsc':
                 sortOption = { name: 1 };
@@ -486,17 +498,26 @@ const loadShop = async (req, res) => {
         }
 
         let page = parseInt(req.query.page) || 1;
-        const limit = 6; 
+        const limit = 6;
         const totalPages = Math.ceil(totalProductsCount / limit);
-        if(totalPages<2){
-            page =  1;
+        console.log('Total Pages:', totalPages);
+        if (totalPages < 2) {
+            page = 1;
         }
         const skip = (page - 1) * limit;
 
         const products = await productModel.find(query).sort(sortOption).skip(skip).limit(limit);
-        console.log(query,"Hii query result")
+        console.log('Products Fetched:', products.length);
 
-        res.render('shop', { product: products, category, totalPages, currentPage: page,query: search,cate:cate,sort:sorted,currentPage:page });
+        res.render('users/shop', {
+            product: products,
+            category,
+            totalPages,
+            currentPage: page,
+            query: search,
+            cate,
+            sort: sorted
+        });
     } catch (error) {
         console.log(error.message);
         res.status(500).send('Internal Server Error');
@@ -541,7 +562,7 @@ const loadMenShop = async (req, res) => {
             case 'priceAsc':
                 sortOption = { discountPrice: 1 };
                 break;
-            case 'priceDsc': // Changed to match the HTML option value
+            case 'priceDsc': 
                 sortOption = { discountPrice: -1 };
                 break;
             case 'newness':
@@ -550,7 +571,7 @@ const loadMenShop = async (req, res) => {
             case 'nameAsc':
                 sortOption = { name: 1 };
                 break;
-            case 'nameDsc': // Changed to match the HTML option value
+            case 'nameDsc': 
                 sortOption = { name: -1 };
                 break;
             case 'outOfStock':
@@ -582,7 +603,7 @@ const loadMenShop = async (req, res) => {
             .skip(skip)
             .limit(limit);
 
-        res.render('mens', { product, category, totalPages, currentPage: page, query: search, cate: cate, sort: sorted });
+        res.render('users/mens', { product, category, totalPages, currentPage: page, query: search, cate: cate, sort: sorted });
     } catch (error) {
         console.log(error.message);
         res.status(500).send('Internal Server Error');
@@ -655,7 +676,7 @@ const loadWomenShop = async (req, res) => {
             .skip(skip)
             .limit(limit);
 
-        res.render('women', { product, category, totalPages, currentPage: page, query: req.query.q, cate: req.query.category, sort: req.query.sort });
+        res.render('users/women', { product, category, totalPages, currentPage: page, query: req.query.q, cate: req.query.category, sort: req.query.sort });
     } catch (error) {
         console.log(error.message);
         res.status(500).send('Internal Server Error');
@@ -680,13 +701,13 @@ const reviewProduct = async (req, res) => {
         if (!order) {
             const productData = await productModel.findById(product._id).populate('category');
             const relatedProducts = await productModel.find({ category: productData.category }).limit(5);
-            const reviewDetails = await Review.find({ product: productData._id }).sort({ createdAt: 1 }).limit(3);
+            const reviewDetails = await reviewModel.find({ product: productData._id }).sort({ createdAt: 1 }).limit(3);
             
             const userId = req.session.user_id;
             const isInWishlist = await isProductInWishlist(userId, productData._id);
             console.log("isIggggnWishlist",isInWishlist);
             
-            const proOffer = await ProductOfferModel.aggregate([
+            const proOffer = await productOfferModel.aggregate([
                 {
                   $match: {
                     'productOffer.product': productData._id,
@@ -705,7 +726,7 @@ const reviewProduct = async (req, res) => {
           
               const proOfferDiscount = (proOffer.length > 0) ? proOffer[0].totalDiscount : 0;
 
-              const result = await CategoryOfferModel.aggregate([
+              const result = await categoryOfferModel.aggregate([
                 {
                   $match: {
                     'categoryOffer.category': productData.category._id,
@@ -734,7 +755,7 @@ const reviewProduct = async (req, res) => {
                 specialDiscount += totalDis;
             }
 
-            return res.render('productDetails', {
+            return res.render('users/productDetails', {
                 product: productData,
                 category: productData.category.name,
                 relatedProducts,
@@ -745,20 +766,20 @@ const reviewProduct = async (req, res) => {
             });
         }
 
-        const userReviewExists = await Review.exists({ product: product._id, email: email });
+        const userReviewExists = await reviewModel.exists({ product: product._id, email: email });
         console.log("userReviewExists",userReviewExists);
         if (userReviewExists) {
 
             const productData = await productModel.findById(product._id).populate('category');
             const relatedProducts = await productModel.find({ category: productData.category }).limit(5);
-            const reviewDetails = await Review.find({ product: productData._id }).sort({ createdAt: 1 }).limit(3);
+            const reviewDetails = await reviewModel.find({ product: productData._id }).sort({ createdAt: 1 }).limit(3);
 
             const userId = req.session.user_id;
 
             const isInWishlist = await isProductInWishlist(userId, productData._id);
             console.log("ihhhhhhsInWishlist",isInWishlist);
 
-            const proOffer = await ProductOfferModel.aggregate([
+            const proOffer = await productOfferModel.aggregate([
                 {
                   $match: {
                     'productOffer.product': productData._id,
@@ -777,7 +798,7 @@ const reviewProduct = async (req, res) => {
           
               const proOfferDiscount = (proOffer.length > 0) ? proOffer[0].totalDiscount : 0;
 
-              const result = await CategoryOfferModel.aggregate([
+              const result = await categoryOfferModel.aggregate([
                 {
                   $match: {
                     'categoryOffer.category': productData.category._id,
@@ -808,7 +829,7 @@ const reviewProduct = async (req, res) => {
 
             console.log("specialdisocunt if userreview exists",specialDiscount)
 
-            return res.render('productDetails', {
+            return res.render('users/productDetails', {
                 product: productData,
                 category: productData.category.name,
                 relatedProducts,
@@ -819,7 +840,7 @@ const reviewProduct = async (req, res) => {
             });
         }
         
-        const newReview = new Review({
+        const newReview = new reviewModel({
             product: product._id,
             name,
             email,
@@ -829,7 +850,7 @@ const reviewProduct = async (req, res) => {
 
         await newReview.save();
 
-        const reviews = await Review.find({ product: product._id });
+        const reviews = await reviewModel.find({ product: product._id });
         const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
         const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
 
@@ -838,14 +859,14 @@ const reviewProduct = async (req, res) => {
 
         const productData = await productModel.findById(product._id).populate('category');
         const relatedProducts = await productModel.find({ category: productData.category }).limit(5);
-        const reviewDetails = await Review.find({ product: productData._id }).sort({ createdAt: 1 }).limit(3);
+        const reviewDetails = await reviewModel.find({ product: productData._id }).sort({ createdAt: 1 }).limit(3);
 
         const userId = req.session.user_id;
 
         const isInWishlist = await isProductInWishlist(userId, product._id);
         console.log("isInWishlist",isInWishlist);
 
-        const proOffer = await ProductOfferModel.aggregate([
+        const proOffer = await productOfferModel.aggregate([
             {
               $match: {
                 'productOffer.product': product._id,
@@ -864,7 +885,7 @@ const reviewProduct = async (req, res) => {
       
           const proOfferDiscount = (proOffer.length > 0) ? proOffer[0].totalDiscount : 0;
 
-        const result = await CategoryOfferModel.aggregate([
+        const result = await categoryOfferModel.aggregate([
             {
               $match: {
                 'categoryOffer.category': productData.category._id,
@@ -893,7 +914,7 @@ const reviewProduct = async (req, res) => {
                 specialDiscount += totalDis;
             }
 
-        return res.render('productDetails', {
+        return res.render('users/productDetails', {
             product: productData,
             category: productData.category.name,
             relatedProducts,
@@ -936,7 +957,7 @@ const searchProductView = async(req,res)=>{
             const productdetails = await productModel.find().populate('category').skip(skip).limit(limit);
             const categorydetails = await categoryModel.find();
     
-            res.render('view-product', { query, product: productdetails, category: categorydetails, totalPages, currentPage: page });
+            res.render('admin/viewProduct', { query, product: productdetails, category: categorydetails, totalPages, currentPage: page });
         }
         else{
         const query = req.query.q; 
@@ -965,7 +986,7 @@ const searchProductView = async(req,res)=>{
           ]
         }).populate('category').skip(skip).limit(limit); 
     
-        res.render('view-product', { query,product: products, category: category, totalPages, currentPage: page });
+        res.render('admin/viewProduct', { query,product: products, category: category, totalPages, currentPage: page });
     }
     }catch(error){
         console.log(error.message);
@@ -982,7 +1003,7 @@ const getStocks = async (req, res) => {
             const totalProducts = await productModel.countDocuments({});
             const totalPages = Math.ceil(totalProducts / 10); 
             console.log("products in search", products);
-            return res.render('stocks', { 
+            return res.render('admin/stocks', { 
                 product: products, 
                 category,
                 currentPage: 1, 
@@ -1015,7 +1036,7 @@ const getStocks = async (req, res) => {
             });
             const totalPages = Math.ceil(totalProducts / 10); 
             console.log("products in search", products);
-            res.render('stocks', { 
+            res.render('admin/stocks', { 
                 product: products, 
                 category,
                 currentPage: 1, 
@@ -1048,7 +1069,7 @@ const updateStock = async (req, res) => {
         const currentPage = 1;
         const query = ''; 
 
-        res.render('stocks', { product: products, category, totalPages: totalPages, currentPage: currentPage, query: query });
+        res.render('admin/stocks', { product: products, category, totalPages: totalPages, currentPage: currentPage, query: query });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "An error occurred while updating stock" });
@@ -1065,7 +1086,7 @@ const searchStock = async (req, res) => {
             const totalProducts = await productModel.countDocuments({});
             const totalPages = Math.ceil(totalProducts / 10); 
             console.log("products in search", products);
-            return res.render('stocks', { 
+            return res.render('admin/stocks', { 
                 product: products, 
                 category,
                 currentPage: 1, 
@@ -1098,7 +1119,7 @@ const searchStock = async (req, res) => {
             });
             const totalPages = Math.ceil(totalProducts / 10); 
             console.log("products in search", products);
-            res.render('stocks', { 
+            res.render('admin/stocks', { 
                 product: products, 
                 category,
                 currentPage: 1, 

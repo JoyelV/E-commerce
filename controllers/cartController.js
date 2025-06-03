@@ -1,10 +1,9 @@
 const productModel = require("../models/productModel");
 const User = require("../models/userModel");
 const cartModel = require("../models/cartModel");
-const addressModel = require("../models/addressModel");
 const wishlistModel = require("../models/wishlistModel");
-const ProductOfferModel = require("../models/productOfferModel");
-const CategoryOfferModel = require("../models/categoryOfferModel");
+const productOfferModel = require("../models/productOfferModel");
+const categoryOfferModel = require("../models/categoryOfferModel");
 const {couponModel}=require('../models/couponModel');
 
 const loadAndShowCart = async (req, res) => {
@@ -32,7 +31,7 @@ const loadAndShowCart = async (req, res) => {
         for (const item of userCart.items) {
             const productId = item.productId;
 
-            const proOffer = await ProductOfferModel.findOne({ 'productOffer.product': productId, 'productOffer.offerStatus': true });
+            const proOffer = await productOfferModel.findOne({ 'productOffer.product': productId, 'productOffer.offerStatus': true });
 
             const proData = await productModel.findOne({ _id: productId, is_deleted: false });
             if(!proData){
@@ -48,7 +47,7 @@ const loadAndShowCart = async (req, res) => {
                 specialDiscount += proOffer.productOffer.discount;
             }
 
-            const cateOffer = await CategoryOfferModel.findOne({
+            const cateOffer = await categoryOfferModel.findOne({
                 'categoryOffer.category': proData.category,
                 "is_active": true
               });
@@ -68,7 +67,7 @@ const loadAndShowCart = async (req, res) => {
 
         userCart.billTotal = sum;
 
-        res.render('cart', { cart: userCart, coupon: eligibleCoupons, wish }); 
+        res.render('users/cart', { cart: userCart, coupon: eligibleCoupons, wish }); 
 
     } catch (err) {
         console.log('loadAndShowCart:', err.message);
@@ -142,7 +141,7 @@ const addCouponToCart = async (req, res) => {
         if (!wish) {
             wish = null;
         }
-        res.render('cart', { cart: updatedUserCart, coupon: eligibleCoupons, wish });
+        res.render('users/cart', { cart: updatedUserCart, coupon: eligibleCoupons, wish });
     } catch (error) {
         console.error('Error adding coupon to cart:', error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -238,7 +237,7 @@ try {
     if (existingCartItem) {
         if (existingCartItem.quantity < product.countInStock && existingCartItem.quantity < 5) {
               
-                const proOffer = await ProductOfferModel.findOne({'productOffer.product':productId,    'productOffer.offerStatus': true});
+                const proOffer = await productOfferModel.findOne({'productOffer.product':productId,    'productOffer.offerStatus': true});
 
                 var specialDiscount = 0;
 
@@ -253,16 +252,12 @@ try {
                 console.log("after updating cart",existingCartItem);
 
             } else if (existingCartItem.quantity + 1 > product.countInStock) {
-
                 return res.status(409).json({ message: 'Stock Limit Exceeded' });
-
         } else {
-
                 return res.status(400).json({ message: 'Maximum quantity per person reached' });
             }
-
     } else {
-            const proOffer = await ProductOfferModel.findOne({'productOffer.product':productId,'productOffer.offerStatus': true});
+            const proOffer = await productOfferModel.findOne({'productOffer.product':productId,'productOffer.offerStatus': true});
             var specialDiscount = 0;
             if (proOffer) {
                 specialDiscount = proOffer.productOffer.discount;
@@ -311,7 +306,7 @@ const increaseQuantity = async (req, res) => {
 
         item.quantity += 1;
 
-        const proOffer = await ProductOfferModel.findOne({'productOffer.product':productId,'productOffer.offerStatus': true});
+        const proOffer = await productOfferModel.findOne({'productOffer.product':productId,'productOffer.offerStatus': true});
         var specialDiscount = 0;
             if (proOffer) {
                 specialDiscount = proOffer.productOffer.discount;
@@ -361,7 +356,7 @@ const decreaseQuantity = async (req, res) => {
         if (item.quantity > 1) {
             item.quantity -= 1;
 
-            const proOffer = await ProductOfferModel.findOne({'productOffer.product':productId,    'productOffer.offerStatus': true});
+            const proOffer = await productOfferModel.findOne({'productOffer.product':productId,    'productOffer.offerStatus': true});
             var specialDiscount = 0;
             if (proOffer) {
                 specialDiscount = proOffer.productOffer.discount;

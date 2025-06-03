@@ -12,9 +12,9 @@
     <meta property="og:url" content="">
     <meta property="og:image" content="">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="adminassets/imgs/theme/favicon.svg">
+    <link rel="shortcut icon" type="image/x-icon" href="/adminassets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
-    <link href="adminassets/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="/adminassets/css/main.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
@@ -23,7 +23,7 @@
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
             <a href="index.html" class="brand-wrap">
-                <img src="adminassets/imgs/brands/7d02989082b082e58141cce8a7536ee3.jpg" class="logo" width="150px" height="auto" display="block" 
+                <img src="/adminassets/imgs/brands/7d02989082b082e58141cce8a7536ee3.jpg" class="logo" width="150px" height="auto" display="block" 
                 margin="0 auto" alt="Moment Dashboard">
                 <h4 style="color: black;">Watch Store</h4>
             </a>
@@ -34,43 +34,43 @@
         <nav>
             <ul class="menu-aside">
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/home"> <!-- Placeholder link for Users -->
+                    <a class="menu-link" href="/admin/dashboard"> 
                         <i class="icon material-icons md-perm_identity"></i>
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/customers"> <!-- Placeholder link for Users -->
+                    <a class="menu-link" href="/admin/customers"> 
                         <i class="icon material-icons md-person"></i>
                         <span class="text">Users</span>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a class="menu-link" href="/admin/category"> <!-- Placeholder link for Categories -->
+                <li class="menu-item active">
+                    <a class="menu-link" href="/admin/categories"> 
                         <i class="icon material-icons md-star"></i>
                         <span class="text">Categories</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/product"> <!-- Placeholder link for Products -->
+                    <a class="menu-link" href="/admin/products"> 
                         <i class="icon material-icons md-shopping_bag"></i>
                         <span class="text">Products</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/order"> <!-- Placeholder link for orders -->
+                    <a class="menu-link" href="/admin/orders"> 
                         <i class="icon material-icons md-menu"></i>
                         <span class="text">Orders</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/stocks"> <!-- Placeholder link for orders -->
+                    <a class="menu-link" href="/admin/stocks"> 
                         <i class="icon material-icons md-apps"></i>
                         <span class="text">Inventory</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/coupon"> <!-- Placeholder link for orders -->
+                    <a class="menu-link" href="/admin/coupons"> 
                         <i class="icon material-icons md-apps"></i>
                         <span class="text">Coupon</span>
                     </a>
@@ -80,18 +80,18 @@
                         <span class="text">Offers</span>
                     </a>
                     <div class="submenu">
-                        <a href="/admin/loadCategoryOffer">Category offer</a>
-                        <a href="/admin/loadProductOffer">Product offer</a>
+                        <a href="/admin/category-offers">Category offer</a>
+                        <a href="/admin/product-offers">Product offer</a>
                     </div>
                 </li>
                 <li class="menu-item ">
-                    <a class="menu-link" href="/admin/loadSalesReport"> <i class="icon material-icons md-assessment"></i>
+                    <a class="menu-link" href="/admin/sales-reports"> <i class="icon material-icons md-assessment"></i>
                         <span class="text">Sales Report</span>
                     </a>
                    
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/logout"> <!-- Placeholder link for orders -->
+                    <a class="menu-link" href="/admin/logout"> 
                         <i class="icon material-icons md-exit_to_app"></i>
                         <span class="text">Logout</span>
                     </a>
@@ -102,27 +102,11 @@
     <main class="main-wrap">
         <header class="main-header navbar">
             <div class="col-search">
-                <!-- <form class="searchform">
-                    <div class="input-group">
-                        <input list="search_terms" type="text" class="form-control" placeholder="Search term">
-                        <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
-                    </div>
-                    <datalist id="search_terms">
-                        <option value="Products">
-                        <option value="New orders">
-                        <option value="Apple iphone">
-                        <option value="Ahmed Hassan">
-                    </datalist>
-                </form> -->
             </div>
             <div class="col-nav">
                 <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
                 <ul class="nav">
                     <li class="nav-item">
-                        <!-- <a class="nav-link btn-icon" href="#">
-                            <i class="material-icons md-notifications animation-shake"></i>
-                            <span class="badge rounded-pill">3</span>
-                        </a> -->
                     </li>
                     <li class="nav-item">
                         <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
@@ -130,23 +114,10 @@
                     <li class="nav-item">
                         <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
                     </li>
-                    <!-- <li class="dropdown nav-item">
-                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
-                            <a class="dropdown-item text-brand" href="#"><img src="adminassets/imgs/theme/flag-us.png" alt="English">English</a>
-                            <a class="dropdown-item" href="#"><img src="adminassets/imgs/theme/flag-fr.png" alt="Français">India</a>
-                            <a class="dropdown-item" href="#"><img src="adminassets/imgs/theme/flag-jp.png" alt="India">日本語</a>
-                            <a class="dropdown-item" href="#"><img src="adminassets/imgs/theme/flag-cn.png" alt="India">中国人</a> -->
-                        <!-- </div>
-                    </li>--->
                     <li class="dropdown nav-item">
                         <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="adminassets/imgs/people/avatar2.jpg" alt="User"></a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount"> 
                             <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
-                            <!-- <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a> -->
                             <div class="dropdown-divider"></div> 
                             <a class="dropdown-item text-danger" href="/admin/logout"><i class="material-icons md-exit_to_app"></i>Logout</a>
                         </div>
@@ -160,7 +131,6 @@
                     <h2 class="content-title card-title">CATEGORIES LIST</h2>
                 </div>
                 <div>
-                    <!-- <input type="text" placeholder="Search Categories" class="form-control bg-white"> -->
                 </div>
             </div>
           
@@ -234,7 +204,7 @@
                                                                     </a>
                                                                     <br><br>
                                                                     <!-- Edit Button -->
-                                                                    <a href="/admin/edit-cate?id=<%= category[i]._id %>" class="btn btn-primary">Edit</a>
+                                                                    <a href="/admin/categories/<%= category[i]._id %>" class="btn btn-primary">Edit</a>
                                                                 </td>
                                                             </tr>
                                                         <% }
@@ -294,79 +264,104 @@
     <script src="adminassets/js/main.js" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById("categoryForm").addEventListener("submit", function(e) {
-                e.preventDefault();
+<!-- Update the delete/restore script section -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Category creation form validation
+    document.getElementById("categoryForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        document.getElementById("nameError").textContent = "";
+        document.getElementById("descriptionError").textContent = "";
+
+        const nameInput = document.getElementById("product_name").value.trim();
+        const descriptionInput = document.getElementById("description").value.trim();
+
+        if (nameInput === "") {
+            document.getElementById("nameError").textContent = "Name cannot be empty.";
+            return;
+        }
+
+        if (!/^[A-Z][a-zA-Z\s]*$/.test(nameInput)) {
+            document.getElementById("nameError").textContent = "Name should start with a capital letter and contain only letters and spaces.";
+            return;
+        }
+
+        if (nameInput.length < 3) {
+            document.getElementById("nameError").textContent = "Name must be at least 3 characters long.";
+            return;
+        }
+
+        if (descriptionInput === "") {
+            document.getElementById("descriptionError").textContent = "Description cannot be empty.";
+            return;
+        }
+
+        if (descriptionInput.length < 15) {
+            document.getElementById("descriptionError").textContent = "Description must be at least 15 characters long.";
+            return;
+        }
+
+        this.submit();
+    });
+
+    // Delete/Restore functionality
+    const deleteRestoreButtons = document.querySelectorAll('.delete-restore');
     
-                document.getElementById("nameError").textContent = "";
-                document.getElementById("descriptionError").textContent = "";
-    
-                const nameInput = document.getElementById("product_name").value.trim();
-                const descriptionInput = document.getElementById("description").value.trim();
-    
-                if (nameInput === "") {
-                    document.getElementById("nameError").textContent = "Name cannot be empty.";
-                    return;
+    deleteRestoreButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            const categoryId = this.getAttribute('data-id');
+            const action = this.getAttribute('data-action') === 'true' ? 'restore' : 'delete';
+
+            document.getElementById('actionText').textContent = action;
+
+            const confirmActionBtn = document.getElementById('confirmActionBtn');
+            const newConfirmActionBtn = confirmActionBtn.cloneNode(true);
+            confirmActionBtn.parentNode.replaceChild(newConfirmActionBtn, confirmActionBtn);
+
+            newConfirmActionBtn.addEventListener('click', async () => {
+                try {
+                    const response = await fetch(`/admin/categories/${categoryId}`, {
+                        method: action === 'restore' ? 'PUT' : 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ is_active: action === 'restore' })
+                    });
+
+                    if (response.ok) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: `Category ${action}d successfully.`,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: `Failed to ${action} category.`,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'An error occurred while processing the request.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
                 }
-    
-                if (!/^[A-Z][a-zA-Z\s]*$/.test(nameInput)) {
-                    document.getElementById("nameError").textContent = "Name should start with a capital letter and contain only letters and spaces.";
-                    return;
-                }
-    
-                if (nameInput.length < 3) {
-                    document.getElementById("nameError").textContent = "Name must be at least 3 characters long.";
-                    return;
-                }
-    
-                if (descriptionInput === "") {
-                    document.getElementById("descriptionError").textContent = "Description cannot be empty.";
-                    return;
-                }
-    
-                if (!/^[A-Z][a-zA-Z\s]*$/.test(descriptionInput)) {
-                    document.getElementById("descriptionError").textContent = "Description should start with a capital letter and contain only letters and spaces.";
-                    return;
-                }
-    
-                if (descriptionInput.length < 15) {
-                    document.getElementById("descriptionError").textContent = "Description must be at least 15 characters long.";
-                    return;
-                }
-    
-                this.submit();
             });
+
+            const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+            confirmationModal.show();
         });
-
-const deleteRestoreButtons = document.querySelectorAll('.delete-restore');
-let categoryIdToDeleteOrRestore; 
-
-deleteRestoreButtons.forEach(button => {
-    button.addEventListener('click', function(event) {
-        event.preventDefault();
-        categoryIdToDeleteOrRestore = this.getAttribute('data-id');
-        const action = this.getAttribute('data-action');
-        const actionTextElement = document.getElementById('actionText');
-        actionTextElement.textContent = action.toLowerCase();
-
-        const confirmActionBtn = document.getElementById('confirmActionBtn');
-        confirmActionBtn.addEventListener('click', function() {
-            try {
-               
-                const actionRoute = action === 'true' ? '/admin/restore-cate' : '/admin/delete-cate';
-                window.location.href = `${actionRoute}?id=${categoryIdToDeleteOrRestore}`;
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        });
-
-        const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
-        confirmationModal.show();
     });
 });
-
 </script>
-
 </body>
 </html>

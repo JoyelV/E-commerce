@@ -5,20 +5,16 @@ const otpgenerator = require("otp-generator");
 const config = require("../config/config");
 const randomstring = require("randomstring");
 const productModel = require("../models/productModel");
-const categoryModel = require('../models/categoryModel');
 const addressModel = require("../models/addressModel");
 const orderModel = require("../models/orderModel");
 const Wallet = require('../models/walletModel');
 const cartModel = require("../models/cartModel");
 const walletModel = require("../models/walletModel");
-const couponModel = require("../models/couponModel");
 
 const securePassword = async(password)=>{
-
     try{
         const passwordHash = await bcrypt.hash(password, 10);
         return passwordHash;
-
     } catch(error){
         throw error; 
     }
@@ -55,7 +51,6 @@ const sendInsertOtp = async (email, otp) => {
     }
 };
 
-
 //for reset password send mail
 const sentResetPasswordMail = async(name,email,token)=>{
     try{
@@ -90,7 +85,7 @@ const sentResetPasswordMail = async(name,email,token)=>{
 const loadRegister = (req,res)=>{
    try{
 
-    res.render('registration');
+    res.render('users/registration');
 
    } catch (error){
     console.log(error.message);
@@ -115,7 +110,7 @@ const insertUser = async (req, res) => {
         req.session.Data = { ...req.body, otp: OTP, timestamp };
         req.session.save();
         await sendInsertOtp(req.body.email, OTP);
-        res.redirect('/verifyOTP');
+        res.redirect('/verify-otp');
 
     } catch (error) {
         console.log('otp',error.message);
@@ -124,7 +119,7 @@ const insertUser = async (req, res) => {
 
 const loadOtp = async (req, res) => {
     try {
-        res.render('verifyOTP',{message:"OTP sent to given mail id, Please check and verify"});
+        res.render('users/verifyOTP',{message:"OTP sent to given mail id, Please check and verify"});
     } catch (error) {
         console.log(error.message);
     }
@@ -138,13 +133,13 @@ const getOtp = async(req,res)=>{
         const currentTime = Date.now();
         const timeDifferenceInSeconds = (currentTime - timestamp) / 1000;
         if (timeDifferenceInSeconds > 60) {
-            res.render('verifyOTP',{message:"OTP expired, please click on resend otp"});
+            res.render('users/verifyOTP',{message:"OTP expired, please click on resend otp"});
         }
 
         if(otpInBody === otp){
             var {name,email,mobile,password,referral} = req.session.Data
             console.log("referral",referral);
-            const passwordHash = await securePassword(req.session.Data.password);
+            const passwordHash = await securePassword(password);
             const existingUser = await User.findOne({email:email})
 
             if(!existingUser){
@@ -175,18 +170,18 @@ const getOtp = async(req,res)=>{
                     );                
                 }                
                 await user.save();    
-                return res.render('login',{message:"User registered successfully"}); 
+                return res.render('users/login',{message:"User registered successfully"}); 
             }
             else{
-                return res.render('registration',{message:"User Email exists, try another email id"}); 
+                return res.render('users/registration',{message:"User Email exists, try another email id"}); 
             }
         }
         else{
-            res.render('verifyOTP',{message:"Enter Valid OTP"});
+            res.render('users/verifyOTP',{message:"Enter Valid OTP"});
         }
     } catch (error) {
         console.log('Error in OTP verification:', error);
-        return res.render('verifyOTP', { message: 'An error occurred during OTP verification. Please try again later.' });
+        return res.render('users/verifyOTP', { message: 'An error occurred during OTP verification. Please try again later.' });
     }
 };
 
@@ -194,7 +189,6 @@ let resendOtp = async (req, res) => {
     try {
         const { email } = req.session.Data;
         const { OTP, timestamp } = generateOTP();
-        // console.log(email, OTP);
         req.session.Data.otp = OTP;
         req.session.Data.timestamp = timestamp;
         await sendInsertOtp(email, OTP);
@@ -213,10 +207,8 @@ let resendOtp = async (req, res) => {
   };
 
 const loginLoad = async(req,res)=>{
-
     try{
-        res.render('login',{message:"Please login for better user experience"});
-        
+        res.render('users/login',{message:"Please login for better user experience"});
     } catch(error) {
         console.log(error.message);
     }
@@ -229,15 +221,15 @@ try {
 
         const userData = await User.findOne({ email:email });
         if(!userData){
-            return res.render('login', { message: "Email and password is incorrect" });
+            return res.render('users/login', { message: "Email and password is incorrect" });
             }
         // console.log(userData.block );
         if(userData.block === '1'){
-            return res.render('login',{message:"User is blocked"})
+            return res.render('users/login',{message:"User is blocked"})
         }
 
         if (userData.is_admin === 1) {
-            return res.render('login',{message:"Admin is blocked"})
+            return res.render('users/login',{message:"Admin is blocked"})
         }
         
         if (userData) {
@@ -245,7 +237,7 @@ try {
 
             if (passwordMatch) {
                 if (userData.is_varified === '0') {
-                    return res.render('login', { message: "Email and password is incorrect" });
+                    return res.render('users/login', { message: "Email and password is incorrect" });
                 }
                 else{
 
@@ -264,10 +256,10 @@ try {
                     });
                     }
                     userCart.save();
-                    return res.render('home',{user_id: req.session.user_id,product:product})
+                    return res.render('users/home',{user_id: req.session.user_id,product:product})
                 }
         } else {
-                return res.render('login', { message: "Email and password is incorrect" });
+                return res.render('users/login', { message: "Email and password is incorrect" });
             }
         }
        
@@ -284,7 +276,7 @@ const loadLandPage = async(req,res)=>{
             .sort({ createdAt: -1 }) 
             .limit(4); 
 
-        res.render('landingPage', { product:products});
+        res.render('users/landingPage', { product:products});
         
     } catch (error) {
         console.log(error.message)
@@ -314,8 +306,7 @@ const loadHome = async(req,res)=>{
             .sort({ createdAt: -1 }) 
             .limit(4); 
 
-        res.render('home', { product:products});
-        
+        res.render('users/home', { product:products});
     } catch (error) {
         console.log(error.message)
     }
@@ -325,8 +316,7 @@ const userLogout = async(req, res) => {
     try {
         await User.findByIdAndUpdate({_id:req.session.user_id},{$set:{status:0}});
         req.session.destroy();
-
-        res.render('login',{message:"User logged out, please login to checkout our new arrivals"})
+        res.render('users/login',{message:"User logged out, please login to checkout our new arrivals"})
     } catch (error) {
         console.log(error.message);
     }
@@ -335,7 +325,7 @@ const userLogout = async(req, res) => {
 //forgot password code start
 const forgetLoad = async(req,res)=>{
     try{
-        res.render('forget');
+        res.render('users/forget');
     }
     catch(error){
        console.log(error.message);
@@ -348,17 +338,17 @@ const forgetverify = async(req,res)=>{
       const userData = await User.findOne({email:email}); 
       if(userData){ 
           if(userData.is_varified === 0){ 
-            res.render('forget',{message:"Please verify email"}); 
+            res.render('users/forget',{message:"Please verify email"}); 
           } 
           else{ 
         const randomString = randomstring.generate(); 
         const updatedData = await User.updateOne({email:email},{$set:{ token:randomString }});
         sentResetPasswordMail(userData.name,userData.email,randomString); 
-        res.render('forget',{message:"Please check your mail to reset password"});         
+        res.render('users/forget',{message:"Please check your mail to reset password"});         
       }
     }
     else{
-        res.render('forget',{message:"User email is incorrect"});
+        res.render('users/forget',{message:"User email is incorrect"});
     }
     }catch(error){
         console.log(error.message); 
@@ -367,14 +357,13 @@ const forgetverify = async(req,res)=>{
 
 const forgetPasswordLoad = async(req,res)=>{
     try{
-
         const token = req.query.token;
         const tokenData = await User.findOne({token:token});
         if(tokenData){
-            res.render('forgetPassword',{user_id:tokenData._id});
+            res.render('users/forgetPassword',{user_id:tokenData._id});
         }
         else{
-            res.render('404',{message:"Token is invalid"});
+            res.render('users/404',{message:"Token is invalid"});
         }
     } catch (error){
         console.log(error.message);
@@ -385,21 +374,16 @@ const resetPassword = async (req, res) => {
     try {
         const password = req.body.password;
         const user_id = req.body.user_id;
-
         const secure_password = await securePassword(password);
-
         const updatedData = await User.findByIdAndUpdate({_id: user_id}, {$set: {password: secure_password}});
-      
         res.status(200).send("Password updated successfully. Please login with your new password.");
-
     } catch (error) {
         console.log(error.message);
-
         res.status(500).send("An error occurred while updating the password.");
     }
 }
 
-const loaduserprofile = async (req, res) => {
+const loadUserProfile = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = 8;
@@ -418,14 +402,14 @@ const loaduserprofile = async (req, res) => {
         if (req.query.ajax) {
             res.json({ orders, totalPages, currentPage: page,wallet });
         } else {
-            res.render('userProfile', { user, address, orders, totalPages, currentPage: page, wallet, message: "User registered successfully" });
+            res.render('users/userProfile', { user, address, orders, totalPages, currentPage: page, wallet, message: "User registered successfully" });
         }
     } catch (error) {
         console.log('loaduserProfile Error:', error.message);
     }
 };
   
-const editprofile = async (req, res) => {
+const editProfile = async (req, res) => {
     try {
       let address = await addressModel.findOne({ user: req.session.user_id }) || null;
       const { name, mobile, email } = req.body;
@@ -455,9 +439,9 @@ const editprofile = async (req, res) => {
       );
     
       if (updatedUser) {
-        return res.render('userProfile', { orders,totalPages, currentPage: page,message: 'Updated successfully!', user: updatedUser, address, orders,wallet });
+        return res.render('users/userProfile', { orders,totalPages, currentPage: page,message: 'Updated successfully!', user: updatedUser, address, orders,wallet });
       } else {
-        return res.render('userProfile', { orders,totalPages, currentPage: page,error: 'Failed to update user details.', user: user, address, orders,wallet });
+        return res.render('users/userProfile', { orders,totalPages, currentPage: page,error: 'Failed to update user details.', user: user, address, orders,wallet });
       }
     } catch (error) {
       console.log('editprofile', error.message);
@@ -465,11 +449,11 @@ const editprofile = async (req, res) => {
   };
   
     
-const loadaddaddress = async(req,res)=>{
+const loadAddAddress = async(req,res)=>{
       try{
         
         const orders = await orderModel.find({ user: req.session.user_id }).sort({orderDate:-1}) || [];
-        res.render('addAddress',{orders});
+        res.render('users/addAddress',{orders});
 
       } catch(error){
           console.log(error.message); 
@@ -533,17 +517,17 @@ const addAddress = async (req, res) => {
 
         if (existingAddress) {
          
-          res.render('addAddress',{orders,totalPages, currentPage: page,error:'Address already exists for this user'});
+          res.render('users/addAddress',{orders,totalPages, currentPage: page,error:'Address already exists for this user'});
         }
         
         else if(existtype) {
          
-          res.render('addAddress',{orders,totalPages, currentPage: page,error:`${existtype.addressType} is alredy registered`});
+          res.render('users/addAddress',{orders,totalPages, currentPage: page,error:`${existtype.addressType} is alredy registered`});
         }
       
         else if (useraddresses.addresses.length >= 3) {
           
-          res.render('addAddress',{orders,totalPages, currentPage: page,error:'User cannot have more than 3 addresses'});
+          res.render('users/addAddress',{orders,totalPages, currentPage: page,error:'User cannot have more than 3 addresses'});
         }
     else{
         
@@ -572,21 +556,19 @@ const addAddress = async (req, res) => {
       }
  };
   
-const loadeditAddress=async(req,res)=>{
+const loadEditAddress=async(req,res)=>{
       try{
         const user= await User.findById(req.session.user_id);
-        // console.log(user)
         let useraddresses = await addressModel.findOne({
           user:user._id
         });
-        //console.log(useraddresses)
         const addressType=req.query.addressType;
         const address = useraddresses.addresses.find(address => address.addressType === addressType);
         const orders = await orderModel.findOne({user:req.session.user_id}).sort({orderDate:-1});
         const wallet = await Wallet.findOne({ user: req.session.user_id }).populate('user');
 
     if (address) {
-        res.render('editAddress', { addresses: address,orders,wallet });
+        res.render('users/editAddress', { addresses: address,orders,wallet });
     } else {
         console.log('Address or HouseNo not found');
     }
@@ -648,7 +630,7 @@ const editAddress = async (req, res) => {
 
           const wallet = await Wallet.findOne({ user: req.session.user_id }).populate('user');
 
-          return res.render('userProfile', { address:addresses,totalPages, currentPage: page, message: 'Updated successfully!' ,user,orders,wallet});
+          return res.render('users/userProfile', { address:addresses,totalPages, currentPage: page, message: 'Updated successfully!' ,user,orders,wallet});
 
       } catch (err) {
           console.error('editAddress:', err.message);
@@ -688,7 +670,7 @@ const deleteAddress=async(req,res)=>{
         const orders = await orderModel.find({ user: req.session.user_id }).skip(skip).limit(limit).sort({orderDate:-1}) || [];
         const wallet = await Wallet.findOne({ user: req.session.user_id }).populate('user');
 
-        res.render('userProfile',{address:addresses,totalPages, currentPage: page,message:`${addressTypeToDelete} Address removed successfully`,user,orders,wallet});
+        res.render('users/userProfile',{address:addresses,totalPages, currentPage: page,message:`${addressTypeToDelete} Address removed successfully`,user,orders,wallet});
         }
         catch(error){
         console.log('deleteAddress',error.message);
@@ -774,7 +756,7 @@ function generateRefferalCode(length) {
     return referralCode;
   }
 
-const getRefferals = async(req, res) => {
+const getReferrals = async(req, res) => {
 
     const user = await User.findOne({ _id: req.session.user_id});
     if(user){
@@ -790,7 +772,7 @@ const getRefferals = async(req, res) => {
 
     successfullRefferals = user.successfullRefferals.reverse();
 
-    res.render("refferals", {
+    res.render("users/refferals", {
       refferalCode: user.referralCode,
       successfullRefferals,
       refferalRewards:user.refferalRewards
@@ -820,14 +802,14 @@ const loadInvoice=async(req,res)=>{
       }
 
       const date = new Date().toDateString();
-      res.render("invoice",{proData, findOrder,user,invoiceId,date});
+      res.render("users/invoice",{proData, findOrder,user,invoiceId,date});
       
     } catch (error) {
       console.log(error.message)
     }
 }
 
-const rewardRefferalToWallet = async (req, res) => {
+const rewardReferralToWallet = async (req, res) => {
     try {
         var userId = req.session.user_id;
         console.log("userId:", userId);
@@ -859,9 +841,7 @@ const rewardRefferalToWallet = async (req, res) => {
         await wallet.save();
         codeData.refferalRewards = 0;
         await codeData.save();
-
         console.log("Updated wallet:", wallet);
-
     } catch (error) {
         console.error("Error:", error);
         res.status(500).json({ success: false, message: "Failed to update wallet." });
@@ -884,17 +864,17 @@ module.exports = {
     insertUser,
     getOtp,
     resendOtp,
-    loaduserprofile,
-    editprofile,
-    loadaddaddress,
+    loadUserProfile,
+    editProfile,
+    loadAddAddress,
     addAddress,
-    loadeditAddress,
+    loadEditAddress,
     editAddress,
     deleteAddress,
     cancelOrder,
     loadLandPage,
     returnOrder,
-    getRefferals,
+    getReferrals,
     loadInvoice,
-    rewardRefferalToWallet
+    rewardReferralToWallet
 }

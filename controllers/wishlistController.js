@@ -8,7 +8,7 @@ const loadWishlist = async (req, res) => {
         if (!wishlist) {
             wishlist = null;
         }
-        res.render('wishlist', { wish: wishlist });
+        res.render('users/wishlist', { wish: wishlist });
         
     } catch (error) {
         console.log(error.message);
@@ -81,4 +81,4 @@ module.exports = {
     loadWishlist,
     addToWishlist,
     removeWishlist
-}
+} 

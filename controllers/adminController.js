@@ -1,21 +1,17 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
-const randomstring = require('randomstring');
-const config = require("../config/config");
-const nodemailer = require("nodemailer");
-const Category = require("../models/categoryModel");
 const orderModel = require("../models/orderModel")
 const productModel = require("../models/productModel")
-const walletModel = require("../models/walletModel")
 const bestSelling = require("../controllers/bestSelling");
 
-const loadLogin = async(req,res)=>{
-    try{
-        res.render('login');
-    } catch (error){
-        console.log(error.message);
+const loadLogin = async (req, res) => {
+    try {
+        return res.render('admin/login');
+    } catch (error) {
+        console.error("Error in loadLogin:", error.message);
+        return res.status(500).send('Internal Server Error');
     }
-}
+};
 
 const verifyLogin = async(req,res)=>{
     try{
@@ -28,19 +24,19 @@ const verifyLogin = async(req,res)=>{
 
             if(passwordMatch){
                 if(userData.is_admin === 0){
-                    res.render('login',{message:"Email and password is incorrect"});
+                    res.render('admin/login',{message:"Email and password is incorrect"});
                 }
                 else{
                     req.session.user_id = userData._id;
-                    res.redirect('/admin/home');
+                    res.redirect('/admin/dashboard');
                 }
             }
             else{
-                res.render('login',{message:"Email and password is incorrect"});
+                res.render('admin/login',{message:"Email and password is incorrect"});
             }
        }
       else{
-        res.render('login',{message:"Email and password is incorrect"});
+        res.render('admin/login',{message:"Email and password is incorrect"});
      }
 
     } catch (error){
@@ -76,7 +72,7 @@ try{
   let bestSellingBrands = await bestSelling.getBestSellingBrands();
   let bestSellingCategories = await bestSelling.getBestSellingCategories();
 
-  res.render("home", {
+  res.render("admin/home", {
     users,
     products,
     usersCount,
@@ -121,7 +117,7 @@ const getBestSelling = async(req,res)=>{
     let bestSellingBrands = await bestSelling.getBestSellingBrands();
     let bestSellingCategories = await bestSelling.getBestSellingCategories();
   
-    res.render("home2", {
+    res.render("admin/homeTwo", {
       users,
       products,
       usersCount,
@@ -452,7 +448,7 @@ const getChartData = async(req,res)=>{
 const logout = async(req,res)=>{
     try{
        req.session.destroy();
-       res.redirect('/admin');
+       res.redirect('/admin/');
     } catch (error){
         console.log(error.message); 
     }
@@ -461,7 +457,7 @@ const logout = async(req,res)=>{
 const customersList = async(req,res)=>{
     try{
       const usersData = await User.find({is_admin:0})
-      res.render('customers',{users:usersData});
+      res.render('admin/customers',{users:usersData});
     }catch(error){
         console.log(error.message);
     }
@@ -470,286 +466,38 @@ const customersList = async(req,res)=>{
 const blockUser = async (req, res) => {
     try {
         const userId = req.params.userId;
-        await User.findByIdAndUpdate(userId, { block: '1' });
-        res.redirect('/admin/customers');
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        if (user.block === '1') {
+            return res.status(400).json({ message: 'User is already blocked' });
+        }
+        await User.findByIdAndUpdate(userId, { block: '1' }, { new: true });
+        res.status(200).json({ message: 'User blocked successfully' });
     } catch (error) {
-        console.log(error.message);
+        console.error('Error in blockUser:', error.message);
+        res.status(500).json({ message: 'Server error while blocking user' });
     }
 };
 
 const unblockUser = async (req, res) => {
     try {
         const userId = req.params.userId;
-        await User.findByIdAndUpdate(userId, { block: '0' });
-
-        res.redirect('/admin/customers');
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        if (user.block === '0') {
+            return res.status(400).json({ message: 'User is already unblocked' });
+        }
+        await User.findByIdAndUpdate(userId, { block: '0' }, { new: true });
+        res.status(200).json({ message: 'User unblocked successfully' });
     } catch (error) {
-        console.log(error.message);
+        console.error('Error in unblockUser:', error.message);
+        res.status(500).json({ message: 'Server error while unblocking user' });
     }
 };
-
-const loadCategory = async(req,res)=>{
-    try{
-      const category = await Category.find({});  
-      res.render('category',{category, message: 'Welcome back to category page'});
-    } catch(error){
-        console.log(error.message);
-    }
-}
-
-
-const loadorder = async (req, res) => {
-    try {
-        const page = parseInt(req.query.page) || 1; 
-        let query = req.query.q;
-
-        if (!query || query.trim() === '') {
-            query = 'All';
-        }
-        const limit = 18; 
-        let filter = {};
-        const currentPage = parseInt(page) || 1;
-
-        if (query && query.toLowerCase() !== 'all') {
-          const users = await User.find({ name: { $regex: new RegExp(query, 'i') } });
-          const userIDs = users.map(user => user._id);
-    
-          if (userIDs.length > 0) {
-            filter.user = { $in: userIDs };
-          } else {
-            switch (query) {
-              case 'Delivered':
-                filter.status = 'Delivered';
-                break;
-              case 'Pending':
-                filter.status = 'Pending';
-                break;
-              case 'Processing':
-                filter.status = 'Processing';
-                break;
-              case 'Shipped':
-                filter.status = 'Shipped';
-                break;
-              case 'Canceled':
-                filter.status = 'Canceled';
-                break;
-              case 'Returned':
-                filter.status = 'Returned';
-                break;
-              default:
-                filter.oId = query;
-            }
-          }
-        }
-    
-        var totalOrders = await orderModel.countDocuments(filter);
-        if(!totalOrders){
-          totalOrders = await orderModel.countDocuments({});
-        }
-        const totalPages = Math.ceil(totalOrders / limit);
-        const adjustedCurrentPage = Math.min(Math.max(currentPage, 1), totalPages);
-        const skip = (adjustedCurrentPage - 1) * limit;
-    
-        const orders = await orderModel.find(filter)
-          .skip(skip)
-          .limit(limit)
-          .populate('user');
-    
-        res.render('orders', {
-          order: orders,
-          currentPage: adjustedCurrentPage,
-          totalPages,
-          query: query,
-        });
-      } catch (error) {
-        console.error("Error:", error.message);
-        res.status(500).send('Internal Server Error');
-      }
-};
-
-const loadorderdetails = async(req,res)=>{
-  try{
-    const id =req.query.id;
-    const orders = await orderModel.findById(id).populate({path:'user',model:'User'});
-    res.render('adminorderdetails',{orders});
-  }catch(error){
-    console.log(error.message);
-  }
-}
-
-const requestAccept = async (req, res) => {
-    try {
-      const { orderId, userId } = req.body;
-      console.log("orderId",orderId);
-
-      const canceledOrder = await orderModel.findOne({ oId: orderId });
-      // console.log("canceledOrder in requestAccept",canceledOrder);
-
-      // canceledOrder.requests.status = "Accepted";
-      // canceledOrder.status = 'Canceled';
-      // await canceledOrder.save();
-
-      if (!canceledOrder) {
-        return res.status(404).json({ success: false, message: 'Order not found' });
-      }
-  
-      const user = await User.findById(userId);
-      if (!user) {
-        return res.status(404).json({ success: false, message: 'User not found' });
-      }
-  
-      for (const orderItem of canceledOrder.items) {
-        let product = await productModel.findById(orderItem.productId).exec();
-  
-        if (product) {
-          product.countInStock += Number(orderItem.quantity);
-          await product.save();
-        }
-      }
-  
-      let userWallet = await walletModel.findOne({ user: userId });
-      if (!userWallet) {
-
-        userWallet = new walletModel({
-          user: userId,
-          amount: 0,
-          transaction: []
-        });
-      }
-  
-      const refundAmount = canceledOrder.billTotal; 
-      console.log("refundAmount",refundAmount);
-      userWallet.amount += refundAmount;
-  
-      userWallet.transaction.push({
-        date: new Date(),
-        paymentMethod: 'wallet',
-        amount: refundAmount,
-        paymentStatus: 'refund'
-      });
-  
-      await userWallet.save();
-  
-    for (let request of canceledOrder.requests) {
-        if (request.status === 'Pending' && request.type === 'Cancel') {
-          const newStatus = 'Canceled';
-          console.log("newStatus after accept request:", newStatus);
-
-        const value = await orderModel.findOne({ oId: orderId });
-        value.status = newStatus;
-        
-        value.requests.forEach(request=>{
-          request.status = 'Accepted';
-        })
-
-        await value.save();
-        console.log("value:",value);
-        }
-        if (request.status === 'Pending' && request.type === 'Return') {
-          const newStatus = 'Returned';
-          console.log("newStatus after accept request:", newStatus);
-
-        const value = await orderModel.findOne({ oId: orderId });
-        value.status = newStatus;
-        
-        value.requests.forEach(request=>{
-          request.status = 'Accepted';
-        })
-
-        await value.save();
-        console.log("value:",value);
-        }
-      }
-  
-       return res.status(200).json({ success: true, message: 'Order status updated successfully' });
-
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-};
-
-const requestCancel = async(req,res)=>{
-  try {
-      const { orderId} = req.body;
-      const Order = await orderModel.findOne({oId:orderId});
-
-      console.log("orderId",orderId);
-
-          if (!Order) {
-              return res.status(404).json({ success: false, message: 'Order not found' });
-          }
-      
-      for (const orderItem of Order.items) {
-          const product = await productModel.findById(orderItem.productId);
-
-          if (product &&product.countInStock>0 ) {
-              await product.save();
-          }
-      }
-
-      Order.requests.forEach(request=>{
-        request.status = 'Rejected';
-      })
-      
-      await Order.save();
-
-      console.log("Order in admin order",Order);
-      
-  if (Order) {
-    return res.status(200).json({ success: true, message: 'Order status rejected'})
-  }
-  return res.status(201).json({ success: true, message: 'Order status updated successfully' });
- 
-   }catch (error) {
-      console.error(error);
-      res.status(500).json({ status: false, message: 'Internal server error' });
-  }
-}
-
-const updateorder = async(req,res)=>{
-  try{
-      const {newStatus,orderId} = req.body;
-     
-      const order=await orderModel.findOne({oId:orderId});
-
-      if (newStatus === 'Shipped') {
-        for (const orderItem of order.items) {
-            const product = await productModel.findById(orderItem.productId);
-
-            if (product) {
-                product.countInStock -= orderItem.quantity;
-                await product.save();
-            }
-        }
-    } else if(newStatus==='Canceled' || newStatus === 'Returned'){
-          for (const orderItem of order.items) {
-              let product = await productModel.findById(orderItem.productId);
-  
-              if (product) {
-                  product.countInStock += orderItem.quantity;
-                  await product.save();
-              }
-          }
-      }
-      const updatedOrder = await orderModel.findOneAndUpdate(
-          { oId: orderId },
-          {$set:{ status: newStatus } },
-      );
-
-      updatedOrder.save();
-        
-      if (!updatedOrder) {
-          return res.status(404).json({ success: false, message: 'Order not found' });
-      }
-
-      return res.status(200).json({ success: true, message: 'Order status updated successfully', updatedOrder });
-  }
-  catch(error){
-      console.log('uporder:',error.message);
-  }
-}
-
 
 module.exports = {
     loadLogin,
@@ -760,11 +508,5 @@ module.exports = {
     customersList,
     blockUser,
     unblockUser,
-    loadCategory,
-    updateorder,
-    requestCancel,
-    requestAccept,
-    loadorderdetails,
-    loadorder,
     getChartData
 }

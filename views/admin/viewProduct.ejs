@@ -12,28 +12,86 @@
     <meta property="og:url" content="">
     <meta property="og:image" content="">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="adminassets/imgs/theme/favicon.svg">
+    <link rel="shortcut icon" type="image/x-icon" href="/adminassets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
-    <link href="adminassets/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="/adminassets/css/main.css" rel="stylesheet" type="text/css" />
 
 <style>
-.page-pagination {
-    text-align: center; 
-    justify-content: center; 
-    align-items: center; 
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px 0;
 }
 
-.page-pagination button {
-    border: 1px solid #6ee811;
+.pagination {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+.page-item {
+    margin: 0 4px;
+}
+
+.page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
     background-color: #fff;
     color: #333;
-    padding: 5px 10px;
-    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    text-decoration: none;
 }
 
-.page-pagination button.active {
-    background-color: #007bff; 
-    color: #fff; 
+.page-link:hover {
+    background-color: #f1f3f5;
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.page-item.active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+}
+
+.page-item.disabled .page-link {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+.page-link:focus {
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+/* Ensure accessibility for screen readers */
+.page-link[aria-label="Previous"],
+.page-link[aria-label="Next"] {
+    font-size: 16px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .page-link {
+        min-width: 30px;
+        height: 30px;
+        font-size: 12px;
+    }
+
+    .page-item {
+        margin: 0 2px;
+    }
 }
 </style>
 
@@ -44,7 +102,7 @@
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
             <a href="index.html" class="brand-wrap">
-                <img src="adminassets/imgs/brands/7d02989082b082e58141cce8a7536ee3.jpg" class="logo" width="150px" height="auto" display="block" 
+                <img src="/adminassets/imgs/brands/7d02989082b082e58141cce8a7536ee3.jpg" class="logo" width="150px" height="auto" display="block" 
                 margin="0 auto" alt="Moment Dashboard">
                 <h4 style="color: black;">Watch Store</h4>
             </a>
@@ -55,43 +113,43 @@
         <nav>
             <ul class="menu-aside">
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/home"> <!-- Placeholder link for Users -->
+                    <a class="menu-link" href="/admin/dashboard"> 
                         <i class="icon material-icons md-perm_identity"></i>
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/customers"> <!-- Placeholder link for Users -->
+                    <a class="menu-link" href="/admin/customers"> 
                         <i class="icon material-icons md-person"></i>
                         <span class="text">Users</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/category"> <!-- Placeholder link for Categories -->
+                    <a class="menu-link" href="/admin/categories"> 
                         <i class="icon material-icons md-star"></i>
                         <span class="text">Categories</span>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a class="menu-link" href="/admin/product"> <!-- Placeholder link for Products -->
+                <li class="menu-item active">
+                    <a class="menu-link" href="/admin/products"> 
                         <i class="icon material-icons md-shopping_bag"></i>
                         <span class="text">Products</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/order"> <!-- Placeholder link for orders -->
+                    <a class="menu-link" href="/admin/orders"> 
                         <i class="icon material-icons md-menu"></i>
                         <span class="text">Orders</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/stocks"> <!-- Placeholder link for orders -->
+                    <a class="menu-link" href="/admin/stocks"> 
                         <i class="icon material-icons md-apps"></i>
                         <span class="text">Inventory</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/coupon"> <!-- Placeholder link for orders -->
+                    <a class="menu-link" href="/admin/coupons"> 
                         <i class="icon material-icons md-apps"></i>
                         <span class="text">Coupon</span>
                     </a>
@@ -101,18 +159,18 @@
                         <span class="text">Offers</span>
                     </a>
                     <div class="submenu">
-                        <a href="/admin/loadCategoryOffer">Category offer</a>
-                        <a href="/admin/loadProductOffer">Product offer</a>
+                        <a href="/admin/category-offers">Category offer</a>
+                        <a href="/admin/product-offers">Product offer</a>
                     </div>
                 </li>
                 <li class="menu-item ">
-                    <a class="menu-link" href="/admin/loadSalesReport"> <i class="icon material-icons md-assessment"></i>
+                    <a class="menu-link" href="/admin/sales-reports"> <i class="icon material-icons md-assessment"></i>
                         <span class="text">Sales Report</span>
                     </a>
                    
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/logout"> <!-- Placeholder link for orders -->
+                    <a class="menu-link" href="/admin/logout"> 
                         <i class="icon material-icons md-exit_to_app"></i>
                         <span class="text">Logout</span>
                     </a>
@@ -156,7 +214,7 @@
                 <div class="col-lg-9"> 
                     <div class="card mb-4">
                         <div class="card-header">
-                            <form action="/admin/search?q=<%= query %>&page=<%= currentPage %>" method="GET">
+                            <form action="/admin/products/search?q=<%= query %>&page=<%= currentPage %>" method="GET">
                                 <div class="input-group">
                                     <input type="search" class="form-control" placeholder="Enter product name or brand name" name="q">
                                     <div class="input-group-append">
@@ -210,7 +268,7 @@
                                     <td><%= product[i].price %></td>
                                     <td><%= product[i].discountPrice %></td>
                                     <td><%= product[i].countInStock %></td>
-                                    <td>
+                                     <td>
                                         <!-- Display status with color -->
                                         <% if(product[i].is_deleted) { %>
                                             <span style="color: red;">Inactive</span>
@@ -219,14 +277,13 @@
                                         <% } %>
                                     </td> 
                                     <td>
-                            
                                             <!-- Toggle button to change status -->
                                             <a href="#" class="btn btn-primary delete-restore" data-id="<%= product[i]._id %>" data-action="<%= product[i].is_deleted ? 'Restore' : 'Delete' %>">
                                                 <%= product[i].is_deleted ? 'Restore' : 'Delete' %>
                                             </a>
                                             <br><br>
-                                            <a href="/admin/editproduct?id=<%= product[i]._id %>" class="btn btn-primary">Edit</a>
-                                    </td>
+                                            <a href="/admin/products/edit?id=<%= product[i]._id %>" class="btn btn-primary">Edit</a>
+                                    </td>         
                                 </tr>
                             <% }
                         } else { %>
@@ -235,21 +292,81 @@
                             </tr>
                         <% } %>
                     </table>
-<!-- pagination starts here // -->
-        <div class="page-pagination">
-                <% if (currentPage > 1) { %>
-                        <a href="/admin/product?q=<%= query %>&page=<%= currentPage - 1 %>"class="page-link">Previous</a>
+<!-- Pagination starts here -->
+<div class="pagination-wrapper">
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <!-- Previous Button -->
+            <% if (currentPage > 1) { %>
+                <li class="page-item">
+                    <a class="page-link" href="/admin/products?q=<%= query %>&page=<%= currentPage - 1 %>" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            <% } else { %>
+                <li class="page-item disabled">
+                    <span class="page-link" aria-hidden="true">&laquo;</span>
+                </li>
+            <% } %>
+
+            <!-- Page Numbers -->
+            <% 
+                const maxPagesToShow = 5; // Show up to 5 page numbers at a time
+                let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+                let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+                // Adjust startPage if endPage reaches totalPages
+                if (endPage === totalPages) {
+                    startPage = Math.max(1, totalPages - maxPagesToShow + 1);
+                }
+
+                // Show first page and ellipsis if needed
+                if (startPage > 1) { %>
+                    <li class="page-item">
+                        <a class="page-link" href="/admin/products?q=<%= query %>&page=1">1</a>
+                    </li>
+                    <% if (startPage > 2) { %>
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    <% } %>
+            <% } %>
+
+            <!-- Dynamic Page Numbers -->
+            <% for (let i = startPage; i <= endPage; i++) { %>
+                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                    <a class="page-link" href="/admin/products?q=<%= query %>&page=<%= i %>"><%= i %></a>
+                </li>
+            <% } %>
+
+            <!-- Show last page and ellipsis if needed -->
+            <% if (endPage < totalPages) { %>
+                <% if (endPage < totalPages - 1) { %>
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
                 <% } %>
-                
-                <% for (let i = 1; i <= totalPages; i++) { %>
-                        <a class="page-link <% if (currentPage === i) { %> active <% } %>" href="/admin/product?q=<%= query %>&page=<%= i %>"><%= i %></a>
-                <% } %>
-                
-                <% if (currentPage < totalPages) { %>
-                        <a href="/admin/product?q=<%= query %>&page=<%= currentPage + 1 %>"class="page-link" >Next</a>
-                <% } %>
-        </div>
-<!-- pagination ends// -->
+                <li class="page-item">
+                    <a class="page-link" href="/admin/products?q=<%= query %>&page=<%= totalPages %>"><%= totalPages %></a>
+                </li>
+            <% } %>
+
+            <!-- Next Button -->
+            <% if (currentPage < totalPages) { %>
+                <li class="page-item">
+                    <a class="page-link" href="/admin/products?q=<%= query %>&page=<%= currentPage + 1 %>" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            <% } else { %>
+                <li class="page-item disabled">
+                    <span class="page-link" aria-hidden="true">&raquo;</span>
+                </li>
+            <% } %>
+        </ul>
+    </nav>
+</div>
+<!-- Pagination ends -->
                     <!-- Confirmation Modal -->
                     <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
@@ -294,32 +411,82 @@
     <script src="adminassets/js/vendors/jquery.fullscreen.min.js"></script>
     <!-- Main Script -->
     <script src="adminassets/js/main.js" type="text/javascript"></script>
-
 <script>
-        const deleteRestoreButtons = document.querySelectorAll('.delete-restore');
-        let productIdToDeleteOrRestore; 
-    
-        deleteRestoreButtons.forEach(button => {
-            button.addEventListener('click', function(event) {
-                event.preventDefault();
-                productIdToDeleteOrRestore = this.getAttribute('data-id');
-                const action = this.getAttribute('data-action');
-                const actionTextElement = document.getElementById('actionText');
-                actionTextElement.textContent = action.toLowerCase();
-    
-                const confirmActionBtn = document.getElementById('confirmActionBtn');
-                confirmActionBtn.addEventListener('click', function() {
-                
-                const actionRoute = action === 'Restore' ? '/admin/restore' : '/admin/delete';
-                window.location.href = `${actionRoute}?id=${productIdToDeleteOrRestore}`;
-                });
+document.addEventListener('DOMContentLoaded', () => {
+    const deleteRestoreButtons = document.querySelectorAll('.delete-restore');
+    const confirmActionBtn = document.getElementById('confirmActionBtn');
+    const confirmationModalElement = document.getElementById('confirmationModal');
+    const confirmationModal = new bootstrap.Modal(confirmationModalElement);
+    let productIdToDeleteOrRestore = null;
 
-                const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
-                confirmationModal.show();
-            });
+    deleteRestoreButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            productIdToDeleteOrRestore = this.getAttribute('data-id');
+            const action = this.getAttribute('data-action');
+            document.getElementById('actionText').textContent = action.toLowerCase();
+            confirmationModal.show();
         });
-        
+    });
+
+    confirmActionBtn.addEventListener('click', async () => {
+        if (!productIdToDeleteOrRestore) return;
+
+        const action = document.querySelector(`.delete-restore[data-id="${productIdToDeleteOrRestore}"]`).getAttribute('data-action');
+        const actionRoute = action === 'Restore' ? '/admin/restore' : '/admin/delete';
+
+        try {
+            const response = await fetch(actionRoute, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id: productIdToDeleteOrRestore })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                const button = document.querySelector(`.delete-restore[data-id="${productIdToDeleteOrRestore}"]`);
+                const statusCell = button.closest('tr').querySelector('td:nth-child(9) span');
+                
+                if (action === 'Delete') {
+                    button.textContent = 'Restore';
+                    button.setAttribute('data-action', 'Restore');
+                    statusCell.textContent = 'Inactive';
+                    statusCell.style.color = 'red';
+                } else {
+                    button.textContent = 'Delete';
+                    button.setAttribute('data-action', 'Delete');
+                    statusCell.textContent = 'Active';
+                    statusCell.style.color = 'green';
+                }
+
+                Swal.fire({
+                    icon: 'success',
+                    title: `${action} Successful`,
+                    text: `The product has been ${action.toLowerCase()}d successfully.`,
+                    confirmButtonColor: '#007bff',
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+            } else {
+                throw new Error(result.message || 'Action failed');
+            }
+        } catch (error) {
+            console.error('Error:', error.message);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message,
+                confirmButtonColor: '#007bff'
+            });
+        } finally {
+            confirmationModal.hide();
+            productIdToDeleteOrRestore = null;
+        }
+    });
+});
 </script>
 </body>
-
 </html>

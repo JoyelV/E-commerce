@@ -15,7 +15,7 @@ const loadSalesReport = async (req, res, next) => {
       },
       { $unwind: "$user" },
       { $sort: { orderDate: -1 } },
-      { $unwind: "$items" }, 
+      { $unwind: "$items" },
       {
         $lookup: {
           from: "products",
@@ -25,13 +25,12 @@ const loadSalesReport = async (req, res, next) => {
         },
       },
       { $unwind: "$productNew" },
-      { $match: { status: "Delivered" } }, 
-      { $match: { 'requests.status': "Pending" } }, 
-
+      { $match: { status: "Delivered" } },
       {
         $project: {
           oId: 1,
           "user.name": 1,
+          "user._id": 1,
           "productNew.name": 1,
           "productNew.price": 1,
           "productNew.discountPrice": 1,
@@ -46,20 +45,22 @@ const loadSalesReport = async (req, res, next) => {
       },
     ]);
 
-    console.log("salesData:", salesData);
+    // Calculate metrics
+    const totalCustomers = [...new Set(salesData.map((sale) => sale.user._id.toString()))].length;
+    const totalOrders = [...new Set(salesData.map((sale) => sale.oId.toString()))].length;
+    const totalQuantity = salesData.reduce((sum, sale) => sum + sale.items.quantity, 0);
+    const totalOrderValue = salesData.reduce((sum, sale) => sum + sale.billTotal, 0);
 
-    let totalRegularPrice = 0;
-    let totalSalesPrice = 0;
-
-    salesData.forEach((sale) => {
-      totalRegularPrice += sale.productNew.price * sale.items.quantity; 
-      totalSalesPrice += sale.billTotal;
+    res.render("admin/salesReport", {
+      salesData,
+      totalCustomers,
+      totalOrders,
+      totalQuantity,
+      totalOrderValue,
+      timePeriod: "all",
+      startingDate: null,
+      endingDate: null,
     });
-
-    const totalDiscountPrice = totalRegularPrice - totalSalesPrice;
-    console.log("totalDiscountPrice:", totalDiscountPrice);
-
-    res.render("salesReport", { salesData, totalSalesPrice, totalRegularPrice,totalDiscountPrice });
   } catch (error) {
     console.error("Error in loadSalesReport: ", error);
     next(error);
@@ -69,157 +70,124 @@ const loadSalesReport = async (req, res, next) => {
 const filterReport = async (req, res, next) => {
   try {
     const receivedData = req.body.timePeriod;
-    console.log("timePeriod",receivedData);
     let startDate, endDate;
 
-    if (receivedData === 'week') {
+    if (receivedData === "week") {
       startDate = new Date();
-      startDate.setHours(0, 0, 0, 0); 
-      startDate.setDate(startDate.getDate() - startDate.getDay()); 
+      startDate.setHours(0, 0, 0, 0);
+      startDate.setDate(startDate.getDate() - startDate.getDay());
 
       endDate = new Date();
-      endDate.setHours(23, 59, 59, 999); 
-      endDate.setDate(endDate.getDate() + (6 - endDate.getDay())); 
-    } else if (receivedData === 'month') {
+      endDate.setHours(23, 59, 59, 999);
+      endDate.setDate(endDate.getDate() + (6 - endDate.getDay()));
+    } else if (receivedData === "month") {
       startDate = new Date();
-      startDate.setDate(1); 
-      startDate.setHours(0, 0, 0, 0); 
+      startDate.setDate(1);
+      startDate.setHours(0, 0, 0, 0);
 
       endDate = new Date();
       endDate.setMonth(endDate.getMonth() + 1);
       endDate.setDate(0);
       endDate.setHours(23, 59, 59, 999);
-    } else if (receivedData === 'year') {
+    } else if (receivedData === "year") {
       startDate = new Date();
-      startDate.setMonth(0); 
+      startDate.setMonth(0);
       startDate.setDate(1);
-      startDate.setHours(0, 0, 0, 0); 
+      startDate.setHours(0, 0, 0, 0);
 
       endDate = new Date();
-      endDate.setMonth(11); 
-      endDate.setDate(31); 
-      endDate.setHours(23, 59, 59, 999); 
-    } else if (receivedData === 'day') {
+      endDate.setMonth(11);
+      endDate.setDate(31);
+      endDate.setHours(23, 59, 59, 999);
+    } else if (receivedData === "day") {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
       startDate = new Date(today);
       endDate = new Date(today);
       endDate.setDate(today.getDate() + 1);
-    } else if (receivedData === 'all') {
-
+    } else if (receivedData === "all") {
+      startDate = null;
+      endDate = null;
     } else {
-      throw new Error('Invalid time period');
+      throw new Error("Invalid time period");
     }
 
     let salesData;
 
-    if (receivedData === 'all') {
-      salesData = await order.aggregate([
-        {
-          $lookup: {
-            from: "users",
-            localField: "user",
-            foreignField: "_id",
-            as: "user",
-          },
+    const basePipeline = [
+      {
+        $lookup: {
+          from: "users",
+          localField: "user",
+          foreignField: "_id",
+          as: "user",
         },
-        { $unwind: "$user" },
-        { $sort: { orderDate: -1 } },
-        { $unwind: "$items" },
-        {
-          $lookup: {
-            from: "products",
-            localField: "items.productId",
-            foreignField: "_id",
-            as: "productNew",
-          },
+      },
+      { $unwind: "$user" },
+      { $sort: { orderDate: -1 } },
+      { $unwind: "$items" },
+      {
+        $lookup: {
+          from: "products",
+          localField: "items.productId",
+          foreignField: "_id",
+          as: "productNew",
         },
-        { $unwind: "$productNew" },
-        {
-          $match: { "status": "Delivered" }
+      },
+      { $unwind: "$productNew" },
+      { $match: { status: "Delivered" } },
+      {
+        $project: {
+          oId: 1,
+          "user.name": 1,
+          "user._id": 1,
+          "productNew.name": 1,
+          "productNew.price": 1,
+          "productNew.discountPrice": 1,
+          billTotal: 1,
+          orderDate: 1,
+          paymentMethod: 1,
+          coupon: 1,
+          "items.productPrice": 1,
+          status: 1,
+          "items.quantity": 1,
         },
-        {
-          $project: {
-            oId: 1,
-            "user.name": 1,
-            "productNew.name": 1,
-            "productNew.price": 1,
-            "productNew.discountPrice": 1,
-            billTotal:1,
-            orderDate: 1,
-            paymentMethod: 1,
-            coupon: 1,
-            "items.productPrice": 1,
-            "status": 1,
-            "items.quantity": 1
-          }
-        }
-      ]);
+      },
+    ];
+
+    if (receivedData === "all") {
+      salesData = await order.aggregate(basePipeline);
     } else {
       salesData = await order.aggregate([
         {
-          $lookup: {
-            from: "users",
-            localField: "user",
-            foreignField: "_id",
-            as: "user",
-          },
+          $match: { orderDate: { $gte: startDate, $lte: endDate } },
         },
-        { $match: { orderDate: { $gte: startDate, $lte: endDate } } },
-        { $unwind: "$user" },
-        { $sort: { orderDate: -1 } },
-        { $unwind: "$items" },
-        {
-          $lookup: {
-            from: "products",
-            localField: "items.productId",
-            foreignField: "_id",
-            as: "productNew",
-          },
-        },
-        { $unwind: "$productNew" },
-        {
-          $match: { "status": "Delivered" }
-        },
-        {
-          $project: {
-            oId: 1,
-            "user.name": 1,
-            "productNew.name": 1,
-            "productNew.price": 1,
-            "productNew.discountPrice": 1,
-            billTotal:1,
-            orderDate: 1,
-            paymentMethod: 1,
-            coupon: 1,
-            "items.productPrice": 1,
-            "status": 1,
-            "items.quantity": 1
-          }
-        }
+        ...basePipeline,
       ]);
     }
 
-    let totalRegularPrice = 0;
-    let totalSalesPrice = 0;
+    // Calculate metrics
+    const totalCustomers = [...new Set(salesData.map((sale) => sale.user._id.toString()))].length;
+    const totalOrders = [...new Set(salesData.map((sale) => sale.oId.toString()))].length;
+    const totalQuantity = salesData.reduce((sum, sale) => sum + sale.items.quantity, 0);
+    const totalOrderValue = salesData.reduce((sum, sale) => sum + sale.billTotal, 0);
 
-    for (let i = 0; i < salesData.length; i++) {
-      totalRegularPrice += salesData[i].productNew.price * salesData[i].items.quantity;
-      totalSalesPrice += salesData[i].billTotal;
-    }
-    console.log("totalRegularPrice",totalRegularPrice);
-    console.log("totalSalesPrice",totalSalesPrice);
-
-    const totalDiscountPrice = totalRegularPrice - totalSalesPrice;
-    console.log("totalDiscountPrice",totalDiscountPrice);
-
-    res.render("salesReport", { salesData, totalDiscountPrice, totalRegularPrice,totalSalesPrice });
+    res.render("admin/salesReport", {
+      salesData,
+      totalCustomers,
+      totalOrders,
+      totalQuantity,
+      totalOrderValue,
+      timePeriod: receivedData,
+      startingDate: null,
+      endingDate: null,
+    });
   } catch (error) {
-    console.error("Error in filter report: ", error);
+    console.error("Error in filterReport: ", error);
     next(error);
   }
-}
+};
 
 const filterCustomDateOrder = async (req, res, next) => {
   try {
@@ -227,8 +195,6 @@ const filterCustomDateOrder = async (req, res, next) => {
 
     const startDate = new Date(startingDate);
     const endDate = new Date(endingDate);
-    console.log("stratDate",startDate);
-    console.log("ENDDate",endDate);
     endDate.setDate(endDate.getDate() + 1);
 
     const salesData = await order.aggregate([
@@ -244,9 +210,9 @@ const filterCustomDateOrder = async (req, res, next) => {
         $match: {
           orderDate: {
             $gte: startDate,
-            $lt: endDate
-          }
-        }
+            $lt: endDate,
+          },
+        },
       },
       { $unwind: "$user" },
       { $sort: { orderDate: -1 } },
@@ -260,44 +226,50 @@ const filterCustomDateOrder = async (req, res, next) => {
         },
       },
       { $unwind: "$productNew" },
-      {
-        $match: { "status": "Delivered" }
-      },
+      { $match: { status: "Delivered" } },
       {
         $project: {
           oId: 1,
           "user.name": 1,
+          "user._id": 1,
           "productNew.name": 1,
           "productNew.price": 1,
           "productNew.discountPrice": 1,
+          billTotal: 1,
           orderDate: 1,
           paymentMethod: 1,
           coupon: 1,
           "items.productPrice": 1,
-          "status": 1,
-          "items.quantity": 1
-        }
-      }
+          status: 1,
+          "items.quantity": 1,
+        },
+      },
     ]);
 
-    let totalRegularPrice = 0;
-    let totalSalesPrice = 0;
+    // Calculate metrics
+    const totalCustomers = [...new Set(salesData.map((sale) => sale.user._id.toString()))].length;
+    const totalOrders = [...new Set(salesData.map((sale) => sale.oId.toString()))].length;
+    const totalQuantity = salesData.reduce((sum, sale) => sum + sale.items.quantity, 0);
+    const totalOrderValue = salesData.reduce((sum, sale) => sum + sale.billTotal, 0);
 
-    for (let i = 0; i < salesData.length; i++) {
-      totalRegularPrice += salesData[i].productNew.price * salesData[i].items.quantity;
-      totalSalesPrice += salesData[i].billTotal;
-    }
-
-    const totalDiscountPrice = totalRegularPrice - totalSalesPrice;
-
-    res.render("salesReport", { salesData, totalSalesPrice, totalRegularPrice,totalDiscountPrice });
+    res.render("admin/salesReport", {
+      salesData,
+      totalCustomers,
+      totalOrders,
+      totalQuantity,
+      totalOrderValue,
+      timePeriod: null,
+      startingDate,
+      endingDate,
+    });
   } catch (error) {
     console.error("Error in filterCustomDateOrder: ", error);
     next(error);
   }
-}
+};
+
 module.exports = {
-loadSalesReport,
-filterReport,
-filterCustomDateOrder
-}
+  loadSalesReport,
+  filterReport,
+  filterCustomDateOrder,
+};

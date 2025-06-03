@@ -12,9 +12,9 @@
     <meta property="og:url" content="">
     <meta property="og:image" content="">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="adminassets/imgs/theme/favicon.svg">
+    <link rel="shortcut icon" type="image/x-icon" href="/adminassets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
-    <link href="adminassets/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="/adminassets/css/main.css" rel="stylesheet" type="text/css" />
     <!-- Cropper.js CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
     <style>
@@ -31,7 +31,7 @@
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
             <a href="index.html" class="brand-wrap">
-                <img src="adminassets/imgs/brands/7d02989082b082e58141cce8a7536ee3.jpg" class="logo" width="150px" height="auto" display="block" 
+                <img src="/adminassets/imgs/brands/7d02989082b082e58141cce8a7536ee3.jpg" class="logo" width="150px" height="auto" display="block" 
                 margin="0 auto" alt="Moment Dashboard">
                 <h4 style="color: black;">Watch Store</h4>
             </a>
@@ -42,65 +42,64 @@
         <nav>
             <ul class="menu-aside">
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/home">
+                    <a class="menu-link" href="/admin/dashboard"> 
                         <i class="icon material-icons md-perm_identity"></i>
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/customers">
+                    <a class="menu-link" href="/admin/customers"> 
                         <i class="icon material-icons md-person"></i>
                         <span class="text">Users</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/category">
+                    <a class="menu-link" href="/admin/categories"> 
                         <i class="icon material-icons md-star"></i>
                         <span class="text">Categories</span>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a class="menu-link" href="/admin/product">
+                <li class="menu-item active">
+                    <a class="menu-link" href="/admin/products"> 
                         <i class="icon material-icons md-shopping_bag"></i>
                         <span class="text">Products</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/order">
+                    <a class="menu-link" href="/admin/orders"> 
                         <i class="icon material-icons md-menu"></i>
                         <span class="text">Orders</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/stocks">
+                    <a class="menu-link" href="/admin/stocks"> 
                         <i class="icon material-icons md-apps"></i>
                         <span class="text">Inventory</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/coupon">
+                    <a class="menu-link" href="/admin/coupons"> 
                         <i class="icon material-icons md-apps"></i>
                         <span class="text">Coupon</span>
                     </a>
                 </li>
                 <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-transactions-1.html">
-                        <i class="icon material-icons md-local_offer"></i>
+                    <a class="menu-link" href="page-transactions-1.html"> <i class="icon material-icons md-local_offer"></i>
                         <span class="text">Offers</span>
                     </a>
                     <div class="submenu">
-                        <a href="/admin/loadCategoryOffer">Category offer</a>
-                        <a href="/admin/loadProductOffer">Product offer</a>
+                        <a href="/admin/category-offers">Category offer</a>
+                        <a href="/admin/product-offers">Product offer</a>
                     </div>
                 </li>
-                <li class="menu-item">
-                    <a class="menu-link" href="/admin/loadSalesReport">
-                        <i class="icon material-icons md-assessment"></i>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/sales-reports"> <i class="icon material-icons md-assessment"></i>
                         <span class="text">Sales Report</span>
                     </a>
+                   
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/logout">
+                    <a class="menu-link" href="/admin/logout"> 
                         <i class="icon material-icons md-exit_to_app"></i>
                         <span class="text">Logout</span>
                     </a>
@@ -164,7 +163,7 @@
                 <div class="col-lg-6">
                     <div class="card mb-4">
                         <div class="card-body">
-                            <form action="/admin/editproduct?id=<%= proData._id %>" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+                            <form action="/admin/edit-product?id=<%= proData._id %>" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Name</label>
                                     <input type="text" class="form-control" name="name" id="product_name" value="<%= proData.name %>" readonly>
@@ -227,7 +226,7 @@
                                         <% proData.images.forEach(image => { %>
                                             <div class="image-container">
                                                 <img src="/productImages/<%= image %>" alt="" height="70px" width="70px">
-                                                <a href="/admin/editproduct?id=<%= proData._id %>&delete=<%= image %>" class="close-icon"><span aria-hidden="true">×</span></a>
+                                                <a href="/admin/edit-product?id=<%= proData._id %>&delete=<%= image %>" class="close-icon"><span aria-hidden="true">×</span></a>
                                             </div>
                                         <% }) %>
                                     </div>

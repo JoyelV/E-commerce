@@ -96,7 +96,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/userprofile">
+                                    <a href="/user-profile">
                                         <i class="icon-user"></i>
                                     </a>
                                 </li>
@@ -217,7 +217,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="userprofile">
+                                    <a href="/user-profile">
                                         <i class="icon-user"></i>
                                     </a>
                                 </li>
@@ -693,9 +693,6 @@
                                 const averageRating = reviewDetails.length > 0 ? totalRating / reviewDetails.length : 0;
                                 %>
                                 
-                                <!-- Product Rating -->
-                                <!-- <div class="product-rating" style="width: <%= averageRating * 20 %>%"></div> -->
-                                
                                 <ul class="review-star">
                                     <% for (let i = 0; i < averageRating; i++) { %>
                                         <li class="fill"><i class="ion-android-star"></i></li>
@@ -745,7 +742,6 @@
                                 <div class="variable-single-item ">
                                     <span>Quantity</span>
                                     <div class="product-variable-quantity">
-                                        <!-- <input min="1" max="100" value="1" type="number"> -->
                                         <input id="productQuantity" min="1" max="100" value="1" type="number">
 
                                     </div>
@@ -773,8 +769,7 @@
                                     <i class="icon-heart"></i>Add to wishlist
                                 </a>
                             <% } %>
-                                                           
-                            <!-- <a href="compare.html" class="icon-space-right"><i class="icon-refresh"></i>Compare</a> -->
+     
                         </div> <!-- End  Product Details Meta Area-->
                     </div> <!-- End Product Variable Area -->
                         <!-- Start  Product Details Catagories Area-->
@@ -887,7 +882,6 @@
     </li>
 <% }) %>
 <!-- End - Review Comment list -->
-
                                             </li> <!-- End - Review Comment list-->
                                         </ul> <!-- End - Review Comment -->
                                         <div class="review-form">
@@ -897,7 +891,7 @@
                                                     *</p>
                                             </div>
 
-<form action="/productDetails" method="post">
+<form action="/product-details" method="post">
     <div class="form-group">
         <label for="name">Name <span>*</span></label>
         <input type="text" class="form-control" id="name" name="name" required>
@@ -969,7 +963,7 @@
                                     <% relatedProducts.forEach(relatedProduct => { %>
                                     <div class="product-default-single-item product-color--golden swiper-slide">
                                         <div class="image-box">
-                                            <a href="/productDetails?id=<%= relatedProduct._id %>">
+                                            <a href="/product-details?id=<%= relatedProduct._id %>">
                                                 <% if (relatedProduct.images && relatedProduct.images.length > 0) { %>
                                                     <img src="/productImages/<%= relatedProduct.images[0] %>" style="width:250px" alt="<%= relatedProduct.name %>">
                                                 <% } else { %>
@@ -978,7 +972,7 @@
                                             </a>
                                             <div class="action-link">
                                                 <div class="action-link-left">
-                                                <a href="/productDetails?id=<%= relatedProduct._id %>">View Product</a>
+                                                <a href="/product-details?id=<%= relatedProduct._id %>">View Product</a>
                                                 </div>
                                                 <div class="action-link-right">
                                                     <a href="#" onclick="addToWishlist('<%= relatedProduct._id %>')"><i class="icon-heart"></i></a>
@@ -1014,11 +1008,7 @@
                                                 </ul>
                                                 <span style="color: rgb(23, 23, 22);"><%= relatedProduct.brand %></span><br>
                                                 <span style="color: rgb(23, 23, 22);"><%= relatedProduct.gender%>'s Watches</span>
-                                                <!-- <div class="view-product-button">
-                                                    <button><a href="/productDetails?id=<%= relatedProduct._id %>">View Product</a></button>
-                                                </div> -->
                                             </div>
-                                        
                                     </div>
                                     <% }); %>
                                     <!-- End Product Default Single Item -->
@@ -1421,7 +1411,7 @@
 <script>
     async function addProductCart(productId) {
         try {
-            let res = await fetch('/add-to-cart', {
+            let res = await fetch('/cart/add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -1480,7 +1470,7 @@ $('.add-to-wishlist').click(function(event) {
     
     $.ajax({
         type: 'GET',
-        url: '/addtowishlist?id=' + productId, 
+        url: '/wishlist/add?id=' + productId, 
         success: function(response) {
             const Toast = Swal.mixin({
                 toast: true,
@@ -1530,7 +1520,7 @@ function confirmRemoval(productId) {
 
 async function removeProductFromWishlist(productId) {
     try {
-        const response = await fetch(`/removeWishlist?id=${productId}`, {
+        const response = await fetch(`/wishlist/remove?id=${productId}`, {
             method: 'GET', 
         });
         if (response.ok) {
@@ -1551,7 +1541,7 @@ async function removeProductFromWishlist(productId) {
 
 <script>
     function addToWishlist(productId) {
-        fetch(`/addtowishlist?id=${productId}`, {
+        fetch(`/wishlist/add?id=${productId}`, {
             method: 'GET',
             credentials: 'same-origin'
         })
@@ -1576,7 +1566,7 @@ async function removeProductFromWishlist(productId) {
                     });
 
                     setTimeout(() => {
-                        window.location.href = `/productDetails?id=${productId}`;
+                        window.location.href = `/product-details?id=${productId}`;
                     }, 2000);
 
                 } else {
@@ -1600,5 +1590,4 @@ async function removeProductFromWishlist(productId) {
     }
 </script>
 </body>
-
 </html> 

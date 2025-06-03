@@ -7,8 +7,7 @@ const productOfferSchema = mongoose.Schema({
     },
     startingDate:{
         type:Date,
-        required:true
-        
+        required:true  
     },
     endingDate:{
         type:Date,
@@ -17,10 +16,7 @@ const productOfferSchema = mongoose.Schema({
     productOffer: {
         product: { type: mongoose.Schema.Types.ObjectId, ref: "product" },
         discount: { type: Number },
-        offerStatus: {
-          type: Boolean,
-          default: false,
-        },
+        offerStatus: { type: Boolean,default: false},
     }
 });
 

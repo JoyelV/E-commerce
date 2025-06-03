@@ -4,26 +4,23 @@ const express = require('express');
 const session = require('express-session');
 var path = require('path');
 require('dotenv').config();
-const passport = require('passport') 
-const {initializingPassport} = require("./config/passportConfig")
+const passport = require('passport'); 
+const {initializingPassport} = require("./config/passportConfig");
 const adminRoute = require("./routes/adminRoute");
 const userRoute = require("./routes/userRoute");
-const config = require("./config/config")
 
 initializingPassport(passport);
 
-// mongoose.connect("mongodb://localhost:27017/ums");
 mongoose.connect(process.env.MONGO_URI);
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
-// app.use(express.static(path.join(__dirname,'views')));
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-// app.use(express.static('public'));
+
 // Serve static files
 app.use(express.static(path.join(__dirname, "public")));
 app.use(nocache());
