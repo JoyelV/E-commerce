@@ -1,6 +1,6 @@
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const User = require('../models/userModel');
-require('dotenv').config();
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const User = require("../models/userModel");
+require("dotenv").config();
 
 const initializingPassport = (passport) => {
   passport.use(
@@ -8,7 +8,7 @@ const initializingPassport = (passport) => {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "/auth/google/callback",
+        callbackURL: process.env.GOOGLE_CALLBACK_URL,
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
@@ -22,7 +22,7 @@ const initializingPassport = (passport) => {
             const newUser = new User({
               name: profile.displayName,
               email: profile.emails[0].value,
-              mobile:profile.phoneNumber?profile.phoneNumber[0]:null,
+              mobile: null,
               is_admin: 0,
               is_varified: 1,
               googleId: profile.id,
@@ -34,6 +34,7 @@ const initializingPassport = (passport) => {
           }
         } catch (err) {
           console.error(err);
+          done(err, null);
         }
       }
     )
@@ -43,10 +44,9 @@ const initializingPassport = (passport) => {
     done(null, user.id);
   });
 
-  passport.deserializeUser(async(id, done) => {
+  passport.deserializeUser(async (id, done) => {
     const user = await User.findById(id);
     done(null, user);
-});
-
-}
+  });
+};
 module.exports = { initializingPassport };
