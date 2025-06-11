@@ -200,29 +200,35 @@ const removeCouponFromCart = async (req, res) => {
 };
 
 const addTocart = async (req, res) => {
-try {
-        const productId = req.body.productId;
-        console.log("productId in addtoCart",productId);
+    try {
+        const { productId, quantity } = req.body;
+        
+        // Validate quantity
+        if (!quantity || isNaN(quantity) || quantity < 1) {
+            return res.status(400).json({ message: 'Invalid quantity' });
+        }
+
         const product = await productModel.findById(productId);
-        console.log(product);
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
 
+        // Check stock availability
+        if (quantity > product.countInStock) {
+            return res.status(409).json({ message: `Only ${product.countInStock} items in stock` });
+        }
+
+        // Remove from wishlist if present
         const wishlist = await wishlistModel.findOne({ user: req.session.user_id });
-        console.log("wishlist",wishlist);
-        
         if (wishlist) {
-           const index = wishlist.product.findIndex(product => product.toString() === productId);
-           if (index !== -1) {
-           wishlist.product.splice(index, 1);
-           await wishlist.save();
-             }
-          }
+            const index = wishlist.product.findIndex(product => product.toString() === productId);
+            if (index !== -1) {
+                wishlist.product.splice(index, 1);
+                await wishlist.save();
+            }
+        }
 
         let userCart = await cartModel.findOne({ owner: req.session.user_id });
-        console.log("userCart",userCart);
-
         if (!userCart) {
             userCart = new cartModel({
                 owner: req.session.user_id,
@@ -230,55 +236,46 @@ try {
                 billTotal: 0,
             });
         }
-        
-    const existingCartItem = userCart.items.find(item => item.productId.toString() === productId);
-    console.log("existingCartItme",existingCartItem);
-    
-    if (existingCartItem) {
-        if (existingCartItem.quantity < product.countInStock && existingCartItem.quantity < 5) {
-              
-                const proOffer = await productOfferModel.findOne({'productOffer.product':productId,    'productOffer.offerStatus': true});
 
-                var specialDiscount = 0;
+        const existingCartItem = userCart.items.find(item => item.productId.toString() === productId);
 
-                if (proOffer) {
-                    specialDiscount = proOffer.productOffer.discount;
-                }
-    
-                var productOfferDiscountPrice = product.discountPrice - (product.discountPrice*specialDiscount)/100;
+        // Calculate price with offer
+        const proOffer = await productOfferModel.findOne({
+            'productOffer.product': productId,
+            'productOffer.offerStatus': true
+        });
+        const specialDiscount = proOffer ? proOffer.productOffer.discount : 0;
+        const productOfferDiscountPrice = product.discountPrice - (product.discountPrice * specialDiscount) / 100;
 
-                existingCartItem.quantity += 1;
-                existingCartItem.price = existingCartItem.quantity * productOfferDiscountPrice;
-                console.log("after updating cart",existingCartItem);
-
-            } else if (existingCartItem.quantity + 1 > product.countInStock) {
-                return res.status(409).json({ message: 'Stock Limit Exceeded' });
+        if (existingCartItem) {
+            const newQuantity = existingCartItem.quantity + quantity;
+            if (newQuantity > product.countInStock) {
+                return res.status(409).json({ message: `Only ${product.countInStock} items in stock` });
+            }
+            if (newQuantity > 5) {
+                return res.status(400).json({ message: 'Maximum 5 items per person allowed' });
+            }
+            existingCartItem.quantity = newQuantity;
+            existingCartItem.price = existingCartItem.quantity * productOfferDiscountPrice;
         } else {
-                return res.status(400).json({ message: 'Maximum quantity per person reached' });
+            if (quantity > 5) {
+                return res.status(400).json({ message: 'Maximum 5 items per person allowed' });
             }
-    } else {
-            const proOffer = await productOfferModel.findOne({'productOffer.product':productId,'productOffer.offerStatus': true});
-            var specialDiscount = 0;
-            if (proOffer) {
-                specialDiscount = proOffer.productOffer.discount;
-            }
-
-            var productOfferDiscountPrice = product.discountPrice - (product.discountPrice*specialDiscount)/100;
-
             userCart.items.push({
                 productId: productId,
-                quantity: 1,
-                price: productOfferDiscountPrice,
+                quantity: quantity,
+                price: quantity * productOfferDiscountPrice,
             });
         }
+
         userCart.billTotal = userCart.items.reduce((total, item) => total + item.price, 0);
         await userCart.save();
-        return res.status(200).json({ message: 'add to cart' });
+        return res.status(200).json({ message: 'Added to cart' });
 
-} catch (err) {
-        console.log('Error adding to cart:', err.message);
+    } catch (err) {
+        console.error('Error adding to cart:', err.message);
         return res.status(500).json({ message: 'Internal server error' });
-}
+    }
 };
 
 const increaseQuantity = async (req, res) => {

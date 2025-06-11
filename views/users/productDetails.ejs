@@ -742,7 +742,7 @@
                                 <div class="variable-single-item ">
                                     <span>Quantity</span>
                                     <div class="product-variable-quantity">
-                                        <input id="productQuantity" min="1" max="100" value="1" type="number">
+                                        <input id="productQuantity" min="1" max="<%= product.countInStock > 5 ? 5 : product.countInStock %>" value="1" type="number" required>
 
                                     </div>
                                 </div>
@@ -1410,56 +1410,77 @@
 
 <script>
     async function addProductCart(productId) {
-        try {
-            let res = await fetch('/cart/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    productId
-                })
+    try {
+        const quantityInput = document.getElementById('productQuantity');
+        const quantity = parseInt(quantityInput.value, 10);
+
+        // Validate quantity
+        if (isNaN(quantity) || quantity < 1 || quantity > 100) {
+            await Swal.fire({
+                title: 'Error',
+                text: 'Please enter a valid quantity between 1 and 100',
+                icon: 'error',
+                showConfirmButton: true
             });
-    
-            if (res.status === 400) {
-                await Swal.fire({
-                    title: 'Error',
-                    text: 'Maximum quantity per person for this product has been reached',
-                    icon: 'error',
-                    showConfirmButton: true
-                });
-            } else if (res.status === 409) {
-                await Swal.fire({
-                    title: 'Error',
-                    text: 'Stock Limit Exceeded',
-                    icon: 'error',
-                    showConfirmButton: true
-                });
-            } else if (res.status === 200) {
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: "bottom",
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    background: "black",
-                    color: "white",
-                    didOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer);
-                        toast.addEventListener('mouseleave', Swal.resumeTimer);
-                    }
-                });
-    
-                Toast.fire({
-                    icon: "success",
-                    title: "Added to cart"
-                });
-            }
-        } catch (error) {
-            console.error('Error adding product to cart:', error);
+            return;
         }
+
+        let res = await fetch('/cart/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                productId,
+                quantity
+            })
+        });
+
+        if (res.status === 400) {
+            await Swal.fire({
+                title: 'Error',
+                text: 'Maximum quantity per person for this product has been reached',
+                icon: 'error',
+                showConfirmButton: true
+            });
+        } else if (res.status === 409) {
+            await Swal.fire({
+                title: 'Error',
+                text: 'Stock Limit Exceeded',
+                icon: 'error',
+                showConfirmButton: true
+            });
+        } else if (res.status === 200) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "bottom",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                background: "black",
+                color: "white",
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                }
+            });
+
+            Toast.fire({
+                icon: "success",
+                title: `Added ${quantity} item(s) to cart`
+            });
+        }
+    } catch (error) {
+        console.error('Error adding product to cart:', error);
+        await Swal.fire({
+            title: 'Error',
+            text: 'Failed to add product to cart',
+            icon: 'error',
+            showConfirmButton: true
+        });
     }
-    </script>
+}
+</script>
     
 <script>
 $(document).ready(function() {
