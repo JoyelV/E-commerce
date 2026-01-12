@@ -1,5 +1,5 @@
 const express = require("express");
-const userRouter = express.Router(); 
+const userRouter = express.Router();
 
 // Middlewares
 const auth = require("../middleware/userAuth");
@@ -65,15 +65,15 @@ userRouter.post('/reset-password', userController.resetPassword);
 // -------------------- Profile & Address --------------------
 userRouter.route('/user-profile')
   .get(auth.isLogin, userController.loadUserProfile)
-  .post(auth.isLogin,userController.editProfile);
+  .post(auth.isLogin, userController.editProfile);
 
 userRouter.route('/add-address')
   .get(auth.isLogin, userController.loadAddAddress)
-  .post(auth.isLogin,userController.addAddress);
+  .post(auth.isLogin, userController.addAddress);
 
 userRouter.route('/edit-address')
   .get(auth.isLogin, userController.loadEditAddress)
-  .post(auth.isLogin,userController.editAddress);
+  .post(auth.isLogin, userController.editAddress);
 
 userRouter.post('/delete-address', auth.isLogin, userController.deleteAddress);
 
@@ -108,7 +108,7 @@ userRouter.get('/wishlist/remove', auth.isLogin, wishlistController.removeWishli
 
 // -------------------- Referrals --------------------
 userRouter.get('/referrals', auth.isLogin, userController.getReferrals);
-userRouter.post('/wallet/reward-referral',auth.isLogin,userController.rewardReferralToWallet);
+userRouter.post('/wallet/reward-referral', auth.isLogin, userController.rewardReferralToWallet);
 
 // -------------------- Invoice --------------------
 userRouter.get('/invoice', auth.isLogin, userController.loadInvoice);
@@ -116,8 +116,8 @@ userRouter.get('/invoice/pdf', auth.isLogin, checkoutController.invoice);
 
 // -------------------- Error Handling --------------------
 userRouter.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).render('error', { message: 'Something went wrong!' });
+  console.error("Original Error:", err);
+  res.status(500).send(`Something went wrong! Error: ${err.message}`);
 });
 
 module.exports = userRouter; 

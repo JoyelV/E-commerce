@@ -1,256 +1,539 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zxx">
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Watch Store - Sign Up</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- ::::::::::::::Favicon icon::::::::::::::-->
+    <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/png">
+    <!-- ::::::::::::::All CSS Files here :::::::::::::: -->
+    <!-- Vendor CSS -->
+    <link rel="stylesheet" href="assets/css/vendor/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/vendor/ionicons.css">
+    <link rel="stylesheet" href="assets/css/vendor/simple-line-icons.css">
+    <link rel="stylesheet" href="assets/css/vendor/jquery-ui.min.css">
+    <!-- Plugin CSS -->
+    <link rel="stylesheet" href="assets/css/plugins/swiper-bundle.min.css">
+    <link rel="stylesheet" href="assets/css/plugins/animate.min.css">
+    <link rel="stylesheet" href="assets/css/plugins/nice-select.css">
+    <link rel="stylesheet" href="assets/css/plugins/venobox.min.css">
+    <link rel="stylesheet" href="assets/css/plugins/jquery.lineProgressbar.css">
+    <link rel="stylesheet" href="assets/css/plugins/aos.min.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
     <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        .wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-image: url('/assets/images/banner/closeup-shot-modern-cool-black-digital-watch-with-brown-leather-strap.jpg');
-            background-size: cover;
-            background-position: center;
-        }
-
-        .registration-wrap {
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 400px; /* Adjust the width */
-            margin: 20px; /* Add margin */
-        }
-
-        .registration-wrap h2 {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .label {
-            font-weight: bold;
-        }
-
         .error {
             color: rgb(223, 75, 11);
             font-size: 14px;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            width: 100%;
-            padding: 10px;
-            margin-top: 20px;
-            cursor: pointer;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-
-        .login-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .login-link a {
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-
-        .image-container {
-            width: 400px; /* Adjust the width */
-            margin: 20px; /* Add margin */
-            border-radius: 10px; /* Add border radius */
-            overflow: hidden;
-        }
-
-        .image-container img {
-            width: 100%;
-            height: auto; /* Ensure aspect ratio is maintained */
-            object-fit: cover;
+            margin-top: 5px;
         }
     </style>
 </head>
+
 <body>
-    <div class="wrapper">
-        <div class="registration-wrap">
-            <h2>SIGN UP</h2>
-            <%  if(typeof message !=='undefined'){ %>
-            <h6 style="color:green"><%= message %></h6>
-            <% } %> 
-            <p class="text-muted text-center">Please fill in the following details to sign up</p>
-            <form id="registrationForm" action="/register" method="post" onsubmit="return validateForm()">
-                <div class="form-group">
-                    <label for="name" class="label">Name <span>*</span></label>
-                    <input type="text" class="form-control" id="name" name="name" required>
-                    <div id="name-error" class="error"></div>
+    <!-- Start Header Area -->
+    <header class="header-section d-none d-xl-block">
+        <div class="header-wrapper">
+            <!-- Start Header Top -->
+            <div class="header-top header-top-bg--white section-fluid">
+                <div class="container-fluid">
+                    <div class="col-12 d-flex align-items-center justify-content-between">
+                        <div class="header-top-left">
+                            <div
+                                class="header-top-contact header-top-contact-color--black header-top-contact-hover-color--aqua">
+                                <a href="tel:0123456789" class="icon-space-right"><i
+                                        class="icon-call-in"></i>8921504778</a>
+                                <a href="mailto:varghesejoyel71@gmail.com" class="icon-space-right"><i
+                                        class="icon-envelope"></i>varghesejoyel71@gmail.com</a>
+                            </div>
+                        </div>
+                        <div class="header-top-center">
+                            <!-- Start Header Logo -->
+                            <div class="header-logo">
+                                <div class="logo">
+                                    <a href=""><img src="adminassets/imgs/brands/7d02989082b082e58141cce8a7536ee3.jpg"
+                                            alt="Company Logo"></a>
+                                </div>
+                            </div>
+                            <!-- End Header Logo -->
+                        </div>
+                        <div class="header-top-right">
+                            <!-- Start Header Action Link -->
+                            <ul class="header-action-link action-color--black action-hover-color--aqua">
+                                <li></li>
+                                <li></li>
+                            </ul>
+                            <!-- End Header Action Link -->
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="email" class="label">Email address <span>*</span></label>
-                    <input type="email" class="form-control" id="email" name="email" required>
-                    <div id="email-error" class="error"></div>
+            </div>
+
+            <!-- Start Header Main Menu -->
+            <div class="header-bottom header-bottom-color--black section-fluid">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12 d-flex align-items-center justify-content-center">
+                            <!-- Start Header Main Menu -->
+                            <div class="main-menu main-menu-style-4 menu-color--white menu-hover-color--aqua">
+                                <nav>
+                                    <ul>
+                                        <li class="has-dropdown">
+                                            <a href="/home">Home <i class="fa fa-angle-down"></i></a>
+                                        </li>
+                                        <li class="has-dropdown has-megaitem">
+                                            <a href="/shop">Shop <i class="fa fa-angle-down"></i></a>
+                                        </li>
+                                        <li class="has-dropdown">
+                                            <a href="/mens">Mens <i class="fa fa-angle-down"></i></a>
+                                        </li>
+                                        <li class="has-dropdown">
+                                            <a href="/women">Women <i class="fa fa-angle-down"></i></a>
+                                        </li>
+                                        <% if (!user_id) { %>
+                                            <li>
+                                                <a class="active main-menu-link" href="/register">Sign-UP</a>
+                                            </li>
+                                            <li>
+                                                <a href="/login">Login</a>
+                                            </li>
+                                            <% } else { %>
+                                                <li>
+                                                    <a href="/logout">Logout</a>
+                                                </li>
+                                                <% } %>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <!-- End Header Main Menu Start -->
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="mobile" class="label">Mobile Number <span>*</span></label>
-                    <input type="text" class="form-control" id="mobileno" name="mobile" required>
-                    <div id="mobileno-error" class="error"></div>
+            </div>
+            <!-- End Header Bottom -->
+        </div>
+    </header>
+    <!-- End Header Area -->
+
+    <!-- Start Mobile Header -->
+    <div class="mobile-header mobile-header-bg-color--golden section-fluid d-lg-block d-xl-none">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 d-flex align-items-center justify-content-between">
+                    <!-- Start Mobile Left Side -->
+                    <div class="mobile-header-left">
+                        <ul class="mobile-menu-logo">
+                            <li>
+                                <a href="index.html">
+                                    <div class="logo">
+                                        <img src="assets/images/carosal/logo.jpg" alt="">
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- End Mobile Left Side -->
+
+                    <!-- Start Mobile Right Side -->
+                    <div class="mobile-right-side">
+                        <ul class="header-action-link action-color--black action-hover-color--golden">
+                            <li>
+                                <a href="#search">
+                                    <i class="icon-magnifier"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#offcanvas-wishlish" class="offcanvas-toggle">
+                                    <i class="icon-heart"></i>
+                                    <span class="item-count">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#offcanvas-add-cart" class="offcanvas-toggle">
+                                    <i class="icon-bag"></i>
+                                    <span class="item-count">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#mobile-menu-offcanvas" class="offcanvas-toggle offside-menu">
+                                    <i class="icon-menu"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- End Mobile Right Side -->
                 </div>
-                <div class="form-group">
-                    <label for="userpassword" class="label">Password <span>*</span></label>
-                    <input type="password" class="form-control" id="userpassword" name="password" required>
-                    <div id="userpassword-error" class="error"></div>
-                </div>
-                <div class="form-group">
-                    <label for="confirmpassword" class="label">Confirm Password <span>*</span></label>
-                    <input type="password" class="form-control" id="confirmpassword" name="confirm_password" required>
-                    <div id="confirmpassword-error" class="error"></div>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" id="referral" name="referral" placeholder="Referral Code (optional)">Refferal Code</div>
-                <button class="btn btn-primary" type="submit">Sign Up</button>
-            </form>
-            <div class="login-link">
-                <p>Already have an account? <a href="/login">Log in</a></p>
             </div>
         </div>
-
     </div>
+    <!-- End Mobile Header -->
 
+    <!--  Start Offcanvas Mobile Menu Section -->
+    <div id="mobile-menu-offcanvas" class="offcanvas offcanvas-rightside offcanvas-mobile-menu-section">
+        <!-- Start Offcanvas Header -->
+        <div class="offcanvas-header text-right">
+            <button class="offcanvas-close"><i class="ion-android-close"></i></button>
+        </div> <!-- End Offcanvas Header -->
+        <!-- Start Offcanvas Mobile Menu Wrapper -->
+        <div class="offcanvas-mobile-menu-wrapper">
+            <!-- Start Mobile Menu  -->
+            <div class="mobile-menu-bottom">
+                <!-- Start Mobile Menu Nav -->
+                <div class="offcanvas-menu">
+                    <ul>
+                        <li><a href="/home"><span>Home</span></a></li>
+                        <li><a href="/shop"><span>Shop</span></a></li>
+                        <li><a href="/mens"><span>Mens</span></a></li>
+                        <li><a href="/women"><span>Women</span></a></li>
+                        <li><a href="/login"><span>Login</span></a></li>
+                    </ul>
+                </div> <!-- End Mobile Menu Nav -->
+            </div> <!-- End Mobile Menu -->
+        </div> <!-- End Offcanvas Mobile Menu Wrapper -->
+    </div> <!-- ...:::: End Offcanvas Mobile Menu Section:::... -->
 
-<script>
-    // Validation functions for each input field
-    function validateName() {
-        var nameInput = document.getElementById("name");
-        var name = nameInput.value.trim();
-        var nameRegex = /^[A-Z][a-z]+ [A-Z][a-z]+$/;
-        if (!nameRegex.test(name)) {
-            showError("name", "Name must contain only characters with spaces between names.");
-            return false;
-        } else {
-            hideError("name");
-            return true;
+    <!-- ...:::: Start Customer Login Section :::... -->
+    <div class="customer-login mt-9">
+        <div class="container">
+            <div class="row">
+                <!--login area start-->
+                <div class="col-lg-6 col-md-6">
+                    <div class="account_form" data-aos="fade-up" data-aos-delay="0">
+                        <h3>Sign Up</h3>
+                        <% if(typeof message !=='undefined' ){ %>
+                            <h6 style="color:green">
+                                <%= message %>
+                            </h6>
+                            <% } %>
+
+                                <form id="registrationForm" action="/register" method="POST"
+                                    style="border-style: solid; border-color: rgb(230, 211, 211); border-width: 3px; padding: 20px;"
+                                    onsubmit="return validateForm()">
+
+                                    <div class="default-form-box mb-20">
+                                        <label>Name <span>*</span></label>
+                                        <input type="text" name="name" id="name" class="form-control"
+                                            style="border-style: solid; border-color: rgb(117, 255, 42); border-width: 1px;">
+                                        <div id="name-error" class="error"></div>
+                                    </div>
+
+                                    <div class="default-form-box mb-20">
+                                        <label>Email <span>*</span></label>
+                                        <input type="email" name="email" id="email" class="form-control"
+                                            style="border-style: solid; border-color: rgb(117, 255, 42); border-width: 1px;">
+                                        <div id="email-error" class="error"></div>
+                                    </div>
+
+                                    <div class="default-form-box mb-20">
+                                        <label>Mobile Number <span>*</span></label>
+                                        <input type="text" name="mobile" id="mobileno" class="form-control"
+                                            style="border-style: solid; border-color: rgb(117, 255, 42); border-width: 1px;">
+                                        <div id="mobileno-error" class="error"></div>
+                                    </div>
+
+                                    <div class="default-form-box mb-20">
+                                        <label>Password <span>*</span></label>
+                                        <input type="password" name="password" id="userpassword" class="form-control"
+                                            style="border-style: solid; border-color: rgb(117, 255, 42); border-width: 1px;">
+                                        <div id="userpassword-error" class="error"></div>
+                                    </div>
+
+                                    <div class="default-form-box mb-20">
+                                        <label>Confirm Password <span>*</span></label>
+                                        <input type="password" name="confirm_password" id="confirmpassword"
+                                            class="form-control"
+                                            style="border-style: solid; border-color: rgb(117, 255, 42); border-width: 1px;">
+                                        <div id="confirmpassword-error" class="error"></div>
+                                    </div>
+
+                                    <div class="default-form-box mb-20">
+                                        <label>Referral Code (Optional)</label>
+                                        <input type="text" name="referral" id="referral" class="form-control"
+                                            placeholder="Referral Code"
+                                            style="border-style: solid; border-color: rgb(117, 255, 42); border-width: 1px;">
+                                    </div>
+
+                                    <div class="login_submit">
+                                        <button class="btn btn-md btn-black-default-hover mb-4"
+                                            type="submit">Register</button>
+                                    </div>
+                                </form>
+
+                                <a href="/login" style="display: block; margin-top: 10px;">Already have an account?
+                                    Login</a>
+                    </div>
+                </div>
+
+                <div class="login-image col-lg-6 col-md-6">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6">
+                                <img src="assets/images/carosal/img19.jpg" style="width: 500px; margin-top: 50px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- ...:::: End Customer Login Section :::... -->
+
+    <!-- Start Footer Section -->
+    <footer class="footer-section footer-bg section-top-gap-100">
+        <div class="footer-wrapper">
+            <!-- Start Footer Top -->
+            <div class="footer-top">
+                <div class="container">
+                    <div class="row mb-n6">
+                        <div class="col-lg-3 col-sm-6 mb-6">
+                            <!-- Start Footer Single Item -->
+                            <div class="footer-widget-single-item footer-widget-color--golden" data-aos="fade-up"
+                                data-aos-delay="0">
+                                <h5 class="title">INFORMATION</h5>
+                                <ul class="footer-nav">
+                                    <li><a href="#">Delivery Information</a></li>
+                                    <li><a href="#">Terms & Conditions</a></li>
+                                    <li><a href="contact-us.html">Contact</a></li>
+                                </ul>
+                            </div>
+                            <!-- End Footer Single Item -->
+                        </div>
+
+                        <div class="col-lg-3 col-sm-6 mb-6">
+                            <!-- Start Footer Single Item -->
+                            <div class="footer-widget-single-item footer-widget-color--golden" data-aos="fade-up"
+                                data-aos-delay="400">
+                                <h5 class="title">CATEGORIES</h5>
+                                <ul class="footer-nav">
+                                    <li><a href="#">Smart Watches</a></li>
+                                    <li><a href="#">Solar Watches</a></li>
+                                    <li><a href="#">Mechanical Watches</a></li>
+                                    <li><a href="#">Digital Watches</a></li>
+                                    <li><a href="#">Analog Watches</a></li>
+                                </ul>
+                            </div>
+                            <!-- End Footer Single Item -->
+                        </div>
+                        <div class="col-lg-3 col-sm-6 mb-6">
+                            <!-- Start Footer Single Item -->
+                            <div class="footer-widget-single-item footer-widget-color--golden" data-aos="fade-up"
+                                data-aos-delay="600">
+                                <h5 class="title">ABOUT US</h5>
+                                <div class="footer-about">
+                                    <p>We are a team of watch store & sellers that sells high quality Watches like
+                                        Rolex, Titan, Police, Tommy Hilfiger.</p>
+
+                                    <address class="address">
+                                        <span>Address: Your address goes here.</span>
+                                        <span>Email: varghesejoyel71@gmail.com</span>
+                                    </address>
+                                </div>
+                            </div>
+                            <!-- End Footer Single Item -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Footer Top -->
+
+            <!-- Start Footer Center -->
+            <div class="footer-center">
+                <div class="container">
+                    <div class="row mb-n6">
+                        <div class="col-xl-3 col-lg-4 col-md-6 mb-6">
+                            <div class="footer-social" data-aos="fade-up" data-aos-delay="0">
+                                <h4 class="title">FOLLOW US</h4>
+                                <ul class="footer-social-link">
+                                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xl-7 col-lg-6 col-md-6 mb-6">
+                            <div class="footer-newsletter" data-aos="fade-up" data-aos-delay="200">
+                                <h4 class="title">DON'T MISS OUT ON THE LATEST</h4>
+                                <div class="form-newsletter">
+                                    <form action="#" method="post">
+                                        <div class="form-fild-newsletter-single-item input-color--golden">
+                                            <input type="email" placeholder="Your email address..." required>
+                                            <button type="submit">SUBSCRIBE!</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Start Footer Center -->
+
+            <!-- Start Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="container">
+                    <div
+                        class="row justify-content-between align-items-center align-items-center flex-column flex-md-row mb-n6">
+                        <div class="col-auto mb-6">
+                            <div class="footer-copyright">
+                                <p class="copyright-text">&copy; 2021 <a href="/home">Moment Watch Store</a>. Made with
+                                    <i class="fa fa-heart text-danger"></i> by <a href="/home" target="_blank">Moment
+                                        Watch</a>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-auto mb-6">
+                            <div class="footer-payment">
+                                <div class="image">
+                                    <img src="assets/images/company-logo/payment.png" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Start Footer Bottom -->
+        </div>
+    </footer>
+    <!-- End Footer Section -->
+
+    <!-- Use the minified version files listed below for better performance and remove the files listed above -->
+    <script src="assets/js/vendor/vendor.min.js"></script>
+    <script src="assets/js/plugins/plugins.min.js"></script>
+
+    <!-- Main JS -->
+    <script src="assets/js/main.js"></script>
+
+    <script>
+        // Validation functions for each input field
+        function validateName() {
+            var nameInput = document.getElementById("name");
+            var name = nameInput.value.trim();
+            // Original regex from previous file: /^[A-Z][a-z]+ [A-Z][a-z]+$/
+            // This force First Last, which might be too strict, but I will keep it as per request "same login except input fields ... and logic related to it"
+            // Wait, "logic related to it for registering new users", so I should keep previous logic.
+            var nameRegex = /^[A-Z][a-z]+ [A-Z][a-z]+$/;
+
+            // To be safe and slightly more user friendly, I'll allow flexible cases or just ensure it's not empty and has letters.
+            // But strict adherence to previous logic means copying the regex.
+            if (!nameRegex.test(name)) {
+                showError("name", "Name must contain only characters with spaces between names (e.g. John Doe).");
+                return false;
+            } else {
+                hideError("name");
+                return true;
+            }
         }
-    }
 
-    function validatePassword() {
-        var passwordInput = document.getElementById("userpassword");
-        var password = passwordInput.value;
-        var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/;
-        if (!passwordRegex.test(password)) {
-            showError("userpassword", "Password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 characters long");
-            return false;
-        } else {
-            hideError("userpassword");
-            return true;
+        function validatePassword() {
+            var passwordInput = document.getElementById("userpassword");
+            var password = passwordInput.value;
+            var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/;
+            if (!passwordRegex.test(password)) {
+                showError("userpassword", "Password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 characters long");
+                return false;
+            } else {
+                hideError("userpassword");
+                return true;
+            }
         }
-    }
 
-    function validateConfirmPassword() {
-        var passwordInput = document.getElementById("userpassword");
-        var confirmPasswordInput = document.getElementById("confirmpassword");
-        var confirmPassword = confirmPasswordInput.value;
-        if (passwordInput.value !== confirmPassword) {
-            showError("confirmpassword", "Passwords do not match");
-            return false;
-        } else {
-            hideError("confirmpassword");
-            return true;
+        function validateConfirmPassword() {
+            var passwordInput = document.getElementById("userpassword");
+            var confirmPasswordInput = document.getElementById("confirmpassword");
+            var confirmPassword = confirmPasswordInput.value;
+            if (passwordInput.value !== confirmPassword) {
+                showError("confirmpassword", "Passwords do not match");
+                return false;
+            } else {
+                hideError("confirmpassword");
+                return true;
+            }
         }
-    }
 
-    function validateEmail() {
-        var emailInput = document.getElementById("email");
-        var email = emailInput.value;
-        var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!emailRegex.test(email)) {
-            showError("email", "Please enter a valid email address");
-            return false;
-        } else {
-            hideError("email");
-            return true;
+        function validateEmail() {
+            var emailInput = document.getElementById("email");
+            var email = emailInput.value;
+            var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                showError("email", "Please enter a valid email address");
+                return false;
+            } else {
+                hideError("email");
+                return true;
+            }
         }
-    }
 
-    function validateMobile() {
-        var mobileInput = document.getElementById("mobileno");
-        var mobile = mobileInput.value.trim();
-        
-        // Regular expression for mobile number validation
-        var mobileRegex = /^(91)?[6-9]\d{9}$/;
-        
-        // Check for 10-digit number without country code
-        if (mobile.length === 10 && /^[6-9]\d{9}$/.test(mobile)) {
-            hideError("mobileno");
-            return true;
-        } 
-        // Check for 11-digit number with optional 0 at the front
-        else if (mobile.length === 11 && /^0[6-9]\d{9}$/.test(mobile)) {
-            hideError("mobileno");
-            return true;
+        function validateMobile() {
+            var mobileInput = document.getElementById("mobileno");
+            var mobile = mobileInput.value.trim();
+
+            // Regular expression for mobile number validation
+            var mobileRegex = /^(91)?[6-9]\d{9}$/;
+
+            // Check for 10-digit number without country code
+            if (mobile.length === 10 && /^[6-9]\d{9}$/.test(mobile)) {
+                hideError("mobileno");
+                return true;
+            }
+            // Check for 11-digit number with optional 0 at the front
+            else if (mobile.length === 11 && /^0[6-9]\d{9}$/.test(mobile)) {
+                hideError("mobileno");
+                return true;
+            }
+            // Check for 12-digit number with country code 91
+            else if (mobile.length === 12 && mobileRegex.test(mobile)) {
+                hideError("mobileno");
+                return true;
+            }
+            // Display error for invalid cases
+            else {
+                showError("mobileno", "Please enter a valid mobile number starting with a digit from 6 to 9");
+                return false;
+            }
         }
-        // Check for 12-digit number with country code 91
-        else if (mobile.length === 12 && mobileRegex.test(mobile)) {
-            hideError("mobileno");
-            return true;
-        } 
-        // Display error for invalid cases
-        else {
-            showError("mobileno", "Please enter a valid mobile number starting with a digit from 6 to 9");
-            return false;
+
+        function showError(inputId, message) {
+            var errorElement = document.getElementById(inputId + "-error");
+            if (!errorElement) {
+                // If the div doesn't exist, create it, but in our static HTML we added divs.
+                // Just in case:
+                errorElement = document.createElement("div");
+                errorElement.id = inputId + "-error";
+                errorElement.className = "error";
+                document.getElementById(inputId).parentNode.appendChild(errorElement);
+            }
+            errorElement.textContent = message;
         }
-    }
 
-    function showError(inputId, message) {
-        var errorElement = document.getElementById(inputId + "-error");
-        if (!errorElement) {
-            errorElement = document.createElement("div");
-            errorElement.id = inputId + "-error";
-            errorElement.className = "error-message";
-            document.getElementById(inputId).insertAdjacentElement("afterend", errorElement);
+        function hideError(inputId) {
+            var errorElement = document.getElementById(inputId + "-error");
+            if (errorElement) {
+                errorElement.textContent = "";
+            }
         }
-        errorElement.textContent = message;
-    }
-    
-    function hideError(inputId) {
-        var errorElement = document.getElementById(inputId + "-error");
-        if (errorElement) {
-            errorElement.remove();
+
+        function validateForm() {
+            var isNameValid = validateName();
+            var isEmailValid = validateEmail();
+            var isMobileValid = validateMobile();
+            var isPasswordValid = validatePassword();
+            var isConfirmPasswordValid = validateConfirmPassword();
+
+            return isNameValid && isEmailValid && isMobileValid && isPasswordValid && isConfirmPasswordValid;
         }
-    }
 
-    function validateForm() {
-        var isNameValid = validateName();
-        var isEmailValid = validateEmail();
-        var isMobileValid = validateMobile();
-        var isPasswordValid = validatePassword();
-        var isConfirmPasswordValid = validateConfirmPassword();
-
-        return isNameValid && isEmailValid && isMobileValid && isPasswordValid && isConfirmPasswordValid;
-    }
-</script>
-
+        // Add real-time validation listeners
+        document.getElementById('name').addEventListener('input', validateName);
+        document.getElementById('email').addEventListener('input', validateEmail);
+        document.getElementById('mobileno').addEventListener('input', validateMobile);
+        document.getElementById('userpassword').addEventListener('input', validatePassword);
+        document.getElementById('confirmpassword').addEventListener('input', validateConfirmPassword);
+    </script>
 </body>
+
 </html>
