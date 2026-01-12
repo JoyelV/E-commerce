@@ -56,6 +56,36 @@ This is a full-stack E-commerce website built using **Node.js**, **Express.js**,
   - `easyinvoice` for generating invoices
   - `express-validator` for input validation
 
+## Screenshots
+
+### User Interface
+
+**Home Page**
+![Home Page](screenshots/home-page.png)
+
+**Product Details**
+![Product Details](screenshots/product-details.png)
+
+**Cart**
+![Cart](screenshots/cart-page.png)
+
+**Checkout & Payment**
+![Checkout](screenshots/checkout.png)
+
+---
+
+### Admin Panel
+
+**Admin Dashboard**
+![Admin Dashboard](screenshots/dashboard.png)
+
+**Orders Management**
+![Orders Management](screenshots/orders-management.png)
+
+**Sales Report**
+![Sales Report](screenshots/sales-report.png)
+
+
 ## Project Structure
 ```
 ├── public/                   # Static assets (images, CSS, JS)
