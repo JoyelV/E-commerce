@@ -1163,13 +1163,25 @@
                     body: JSON.stringify(data)
                 });
                 const responseData = await response.json();
+                
+                if (!response.ok) {
+                     Swal.fire({
+                        title: 'Error!',
+                        text: responseData.message || 'Failed to initiate payment.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
                 const options = {
-                    key: 'rzp_test_3ShBVx2iIlCWc5',
-                    amount: "<%= Math.round(cart.billTotal + cart.deliveryCharges) * 100 %>",
-                    currency: 'INR',
+                    key: responseData.key_id,
+                    amount: responseData.amount,
+                    currency: responseData.currency,
                     name: 'Moment Watch Store',
                     description: 'Buy watch',
                     image: 'adminassets/imgs/brands/7d02989082b082e58141cce8a7536ee3.jpg',
+                    order_id: responseData.razorpay_order_id,
                     handler: async function (response) {
                         try {
                             const updateResponse = await fetch('/checkout/update-payment', {
