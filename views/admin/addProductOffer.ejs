@@ -17,79 +17,81 @@
     <link href="/adminassets/css/main.css" rel="stylesheet" type="text/css" />
     <style>
         .error-message {
-            color: red; 
+            color: red;
             font-size: 14px;
-            margin-top: 5px; 
+            margin-top: 5px;
         }
     </style>
 </head>
 
 <body>
     <div class="screen-overlay"></div>
-    
+
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
             <a href="index.html" class="brand-wrap">
-                <img src="/adminassets/imgs/brands/7d02989082b082e58141cce8a7536ee3.jpg" class="logo" width="150px" height="auto" display="block" 
-                margin="0 auto" alt="Moment Dashboard">
+                <img src="/adminassets/imgs/brands/7d02989082b082e58141cce8a7536ee3.jpg" class="logo" width="150px"
+                    height="auto" display="block" margin="0 auto" alt="Moment Dashboard">
                 <h4 style="color: black;">Watch Store</h4>
             </a>
             <div>
-                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i>
+                </button>
             </div>
         </div>
         <nav>
             <ul class="menu-aside">
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/dashboard"> 
+                    <a class="menu-link" href="/admin/dashboard">
                         <i class="icon material-icons md-perm_identity"></i>
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/customers"> 
+                    <a class="menu-link" href="/admin/customers">
                         <i class="icon material-icons md-person"></i>
                         <span class="text">Users</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/categories"> 
+                    <a class="menu-link" href="/admin/categories">
                         <i class="icon material-icons md-star"></i>
                         <span class="text">Categories</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/products"> 
+                    <a class="menu-link" href="/admin/products">
                         <i class="icon material-icons md-shopping_bag"></i>
                         <span class="text">Products</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/orders"> 
+                    <a class="menu-link" href="/admin/orders">
                         <i class="icon material-icons md-menu"></i>
                         <span class="text">Orders</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/stocks"> 
+                    <a class="menu-link" href="/admin/stocks">
                         <i class="icon material-icons md-apps"></i>
                         <span class="text">Inventory</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/coupons"> 
+                    <a class="menu-link" href="/admin/coupons">
                         <i class="icon material-icons md-apps"></i>
                         <span class="text">Coupon</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/coupons"> 
+                    <a class="menu-link" href="/admin/coupons">
                         <i class="icon material-icons md-apps"></i>
                         <span class="text">Coupon</span>
                     </a>
                 </li>
                 <li class="menu-item active has-submenu">
-                    <a class="menu-link" href="page-transactions-1.html"> <i class="icon material-icons md-local_offer"></i>
+                    <a class="menu-link" href="page-transactions-1.html"> <i
+                            class="icon material-icons md-local_offer"></i>
                         <span class="text">Offers</span>
                     </a>
                     <div class="menu-item active submenu">
@@ -101,10 +103,10 @@
                     <a class="menu-link" href="/admin/sales-reports"> <i class="icon material-icons md-assessment"></i>
                         <span class="text">Sales Report</span>
                     </a>
-                   
+
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/logout"> 
+                    <a class="menu-link" href="/admin/logout">
                         <i class="icon material-icons md-exit_to_app"></i>
                         <span class="text">Logout</span>
                     </a>
@@ -120,92 +122,81 @@
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 </nav>
             </header>
-            <div class="col-nav">
-                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
-                <ul class="nav">
-                    <li class="nav-item">
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
-                    </li>
-                    <li class="dropdown nav-item">
-                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="adminassets/imgs/people/avatar2.jpg" alt="User"></a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
-                            <a class="dropdown-item text-danger" href="/admin/logout"><i class="material-icons md-exit_to_app"></i>Logout</a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+
         </header>
         <section class="content-main">
-                <div class="row justify-content-center mt-30">
-                    <div class="col-lg-6">
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <h4>Add new Product offer</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="mx-auto"> 
-                                    <form action="/admin/product-offers" id="prdOfferForm" method="post">
-                                        <div class="mb-4">
-                                            <label for="product_name" class="form-label">Offer Name</label>
-                                            <input type="text" name="name" placeholder="Type here" class="form-control" id="name">
-                                            <div id="prdOfferName-error" class="error-message"></div>
-                                        </div>
-                                        <div class="mb-4">
-                                            <label class="form-label">Starting Date</label>
-                                            <input id="prdStartingDate" name="startingDate" type="date" placeholder="mm/dd/yy" class="form-control">
-                                            <div id="prdStartingDate-error" class="error-message"></div>
-                                        </div>
-                                        <div class="mb-4">
-                                            <label class="form-label">Ending Date</label>
-                                            <input id="prdEndingDate" name="endingDate" type="date" placeholder="mm/dd/yy" class="form-control">
-                                            <div id="prdEndingDate-error" class="error-message"></div>
-                                        </div>
-                                        <div class="mb-4">
-                                            <label class="form-label">Product</label>
-                                            <select class="form-select" name="products">
-                                                <% if(locals.productData) { %>
-                                                    <% for(let i = 0; i < productData.length; i++) { %>
-                                                            <option value="<%= productData[i]._id %>"><%= productData[i].name %></option>
+            <div class="row justify-content-center mt-30">
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Add new Product offer</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="mx-auto">
+                                <form action="/admin/product-offers" id="prdOfferForm" method="post">
+                                    <div class="mb-4">
+                                        <label for="product_name" class="form-label">Offer Name</label>
+                                        <input type="text" name="name" placeholder="Type here" class="form-control"
+                                            id="name">
+                                        <div id="prdOfferName-error" class="error-message"></div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Starting Date</label>
+                                        <input id="prdStartingDate" name="startingDate" type="date"
+                                            placeholder="mm/dd/yy" class="form-control">
+                                        <div id="prdStartingDate-error" class="error-message"></div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Ending Date</label>
+                                        <input id="prdEndingDate" name="endingDate" type="date" placeholder="mm/dd/yy"
+                                            class="form-control">
+                                        <div id="prdEndingDate-error" class="error-message"></div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Product</label>
+                                        <select class="form-select" name="products">
+                                            <% if(locals.productData) { %>
+                                                <% for(let i=0; i < productData.length; i++) { %>
+                                                    <option value="<%= productData[i]._id %>">
+                                                        <%= productData[i].name %>
+                                                    </option>
                                                     <% } %>
-                                                <% } %>
-                                            </select>
-                                            <p><span id="error4" style="display: none;" class="mt-15 err text-danger"></span></p>
-                                        </div>
-                                        
-                                        <div class="mb-4">
-                                            <label class="form-label">Product Discount</label>
-                                            <input placeholder="Type here" name="productDiscount" class="form-control" id="productDiscount">
-                                            <div id="prdDiscount-error" class="error-message"></div>
-                                        </div>
-                                        <button type="submit" class="btn ms-auto d-block btn-md rounded font-sm hover-up">Add Offer</button>
-                                    </form>
-                                    
-                                </div>
+                                                        <% } %>
+                                        </select>
+                                        <p><span id="error4" style="display: none;"
+                                                class="mt-15 err text-danger"></span></p>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label">Product Discount</label>
+                                        <input placeholder="Type here" name="productDiscount" class="form-control"
+                                            id="productDiscount">
+                                        <div id="prdDiscount-error" class="error-message"></div>
+                                    </div>
+                                    <button type="submit"
+                                        class="btn ms-auto d-block btn-md rounded font-sm hover-up">Add Offer</button>
+                                </form>
+
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>    
-            <footer class="main-footer font-xs">
-                <div class="row pb-30 pt-15">
-                    <div class="col-sm-6">
-                        <script>
+            </div>
+        </section>
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
                         document.write(new Date().getFullYear())
-                        </script> ©, Evara - HTML Ecommerce Template .
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="text-sm-end">
-                            All rights reserved
-                        </div>
+                    </script> ©, Evara - HTML Ecommerce Template .
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+                        All rights reserved
                     </div>
                 </div>
-            </footer>
+            </div>
+        </footer>
     </main>
     <script src="adminassets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="adminassets/js/vendors/bootstrap.bundle.min.js"></script>
@@ -215,83 +206,84 @@
     <!-- Main Script -->
     <script src="adminassets/js/main.js" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const form = document.getElementById('prdOfferForm');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('prdOfferForm');
 
-        form.addEventListener('submit', function(event) {
-            event.preventDefault(); 
-            
-            const name = document.getElementById('name').value.trim();
-            const startingDate = document.getElementById('prdStartingDate').value.trim();
-            const endingDate = document.getElementById('prdEndingDate').value.trim();
-            const productDiscount = document.getElementById('productDiscount').value.trim();
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
 
-            clearErrors();
+                const name = document.getElementById('name').value.trim();
+                const startingDate = document.getElementById('prdStartingDate').value.trim();
+                const endingDate = document.getElementById('prdEndingDate').value.trim();
+                const productDiscount = document.getElementById('productDiscount').value.trim();
 
-            let isValid = true;
+                clearErrors();
 
-            if (name === '') {
-                showError('prdOfferName-error', 'Name is required');
-                isValid = false;
-            } else if (!isValidName(name)) {
-                showError('prdOfferName-error', 'Name should only contain letters and spaces');
-                isValid = false;
-            }
+                let isValid = true;
 
-            if (startingDate === '') {
-                showError('prdStartingDate-error', 'Starting Date is required');
-                isValid = false;
-            }
+                if (name === '') {
+                    showError('prdOfferName-error', 'Name is required');
+                    isValid = false;
+                } else if (!isValidName(name)) {
+                    showError('prdOfferName-error', 'Name should only contain letters and spaces');
+                    isValid = false;
+                }
 
-            if (endingDate === '') {
-                showError('prdEndingDate-error', 'Ending Date is required');
-                isValid = false;
-            }
+                if (startingDate === '') {
+                    showError('prdStartingDate-error', 'Starting Date is required');
+                    isValid = false;
+                }
 
-            if (productDiscount === '') {
-                showError('prdDiscount-error', 'Product Discount is required');
-                isValid = false;
-            } else if (isNaN(productDiscount)) {
-                showError('prdDiscount-error', 'Product Discount must be a number');
-                isValid = false;
-            } else if (productDiscount < 0 || productDiscount > 40) {
-                showError('prdDiscount-error', 'Product Discount must be between 0 and 40');
-                isValid = false;
-            }
+                if (endingDate === '') {
+                    showError('prdEndingDate-error', 'Ending Date is required');
+                    isValid = false;
+                }
 
-            if (isValid) {
-                form.submit();
-            }
+                if (productDiscount === '') {
+                    showError('prdDiscount-error', 'Product Discount is required');
+                    isValid = false;
+                } else if (isNaN(productDiscount)) {
+                    showError('prdDiscount-error', 'Product Discount must be a number');
+                    isValid = false;
+                } else if (productDiscount < 0 || productDiscount > 40) {
+                    showError('prdDiscount-error', 'Product Discount must be between 0 and 40');
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    form.submit();
+                }
+            });
         });
-    });
 
-    function showError(id, message) {
-        const errorDiv = document.getElementById(id);
-        errorDiv.textContent = message;
-        errorDiv.style.display = 'block';
-    }
+        function showError(id, message) {
+            const errorDiv = document.getElementById(id);
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
 
-    function clearError(id) {
-        const errorDiv = document.getElementById(id);
-        errorDiv.textContent = '';
-        errorDiv.style.display = 'none';
-    }
-
-    function clearErrors() {
-        const errorDivs = document.querySelectorAll('.error-message');
-        errorDivs.forEach(function(errorDiv) {
+        function clearError(id) {
+            const errorDiv = document.getElementById(id);
             errorDiv.textContent = '';
             errorDiv.style.display = 'none';
-        });
-    }
+        }
 
-    function isValidName(name) {
-        const regex = /^[a-zA-Z\s]+$/;
-        return regex.test(name);
-    }
-</script>
+        function clearErrors() {
+            const errorDivs = document.querySelectorAll('.error-message');
+            errorDivs.forEach(function (errorDiv) {
+                errorDiv.textContent = '';
+                errorDiv.style.display = 'none';
+            });
+        }
+
+        function isValidName(name) {
+            const regex = /^[a-zA-Z\s]+$/;
+            return regex.test(name);
+        }
+    </script>
 </body>
+
 </html>

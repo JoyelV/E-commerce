@@ -40,6 +40,9 @@ app.use(passport.session());
 
 app.use((req, res, next) => {
   res.locals.user_id = req.session.user_id;
+  if (req.user) {
+    res.locals.user_id = req.user._id;
+  }
   next();
 });
 

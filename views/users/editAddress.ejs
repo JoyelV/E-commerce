@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zxx">
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -34,7 +35,8 @@
                             <!-- Start Header Logo -->
                             <div class="header-logo">
                                 <div class="logo">
-                                    <a href=""><img src="adminassets/imgs/brands/7d02989082b082e58141cce8a7536ee3.jpg" alt=""></a>
+                                    <a href=""><img src="adminassets/imgs/brands/7d02989082b082e58141cce8a7536ee3.jpg"
+                                            alt=""></a>
                                 </div>
                             </div>
                             <!-- End Header Logo -->
@@ -48,7 +50,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/cart" >
+                                    <a href="/cart">
                                         <i class="icon-bag"></i>
                                     </a>
                                 </li>
@@ -94,7 +96,7 @@
                                             <a href="/mens">Mens</a>
                                         </li>
                                         <li class="has-dropdown">
-                                            <a href="/women">Women <i class="fa fa-angle-down"></i></a>
+                                            <a href="/women">Women</a>
                                         </li>
                                         <li>
                                             <a href="/logout">Logout</a>
@@ -136,7 +138,7 @@
                                             <a href="/mens">Mens</a>
                                         </li>
                                         <li class="has-dropdown">
-                                            <a href="/women">Women <i class="fa fa-angle-down"></i></a>
+                                            <a href="/women">Women</a>
                                         </li>
                                         <li>
                                             <a href="/logout">Logout</a>
@@ -212,7 +214,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="/cart" >
+                                <a href="/cart">
                                     <i class="icon-bag"></i>
                                 </a>
                             </li>
@@ -562,22 +564,22 @@
     <!-- Offcanvas Overlay -->
     <div class="offcanvas-overlay"></div>
 
-   <!-- ...:::: Start Breadcrumb Section:::... -->
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="breadcrumb-nav breadcrumb-nav-color--black breadcrumb-nav-hover-color--golden">
-                        <nav aria-label="breadcrumb"></b>
-                            <ul>
-                                <li><a href="/home" style="color: #1041f4;">Home</a></li>
-                                <li><a href="/shop" style="color: rgb(209, 48, 48);">Shop</a></li>
-                                <li class="active" aria-current="page" style="color: #07e34d;"><b>Edit Address</b></li>
-                            </ul>
-                        </nav>
-                    </div>
+    <!-- ...:::: Start Breadcrumb Section:::... -->
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumb-nav breadcrumb-nav-color--black breadcrumb-nav-hover-color--golden">
+                    <nav aria-label="breadcrumb"></b>
+                        <ul>
+                            <li><a href="/home" style="color: #1041f4;">Home</a></li>
+                            <li><a href="/shop" style="color: rgb(209, 48, 48);">Shop</a></li>
+                            <li class="active" aria-current="page" style="color: #07e34d;"><b>Edit Address</b></li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
-</div> <!-- ...:::: End Breadcrumb Section:::... -->
+        </div>
+    </div> <!-- ...:::: End Breadcrumb Section:::... -->
     <!-- ...:::: Start Account Dashboard Section:::... -->
     <div class="account-dashboard">
         <div class="container">
@@ -589,8 +591,8 @@
                             <li><a href="#dashboard" data-bs-toggle="tab"
                                     class="nav-link btn btn-block btn-md btn-black-default-hover active">Addresses</a>
                             </li>
-                            <li><a href="/userprofile"
-                                    class="nav-link btn btn-black-default-hover">User Profile</a></li>
+                            <li><a href="/userprofile" class="nav-link btn btn-black-default-hover">User Profile</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -601,19 +603,26 @@
                             <form action="" method="post" onsubmit="return validateForm(event)">
                                 <!-- Address Fields -->
                                 <div class="default-form-box mb-20">
-                                    <%if(typeof message!=='undefined'){%>
-                                        <p class="text-success"><%=message%></p>
+                                    <%if(typeof message!=='undefined' ){%>
+                                        <p class="text-success">
+                                            <%=message%>
+                                        </p>
                                         <%}%>
-                                        <%if(typeof error!=='undefined'){%>
-                                            <p class="text-danger"><%=error%></p>
-                                            <%}%>
-                                    <label>Address Type</label>
-                                    <select name="addressType">
-                                        <option value="home" <%= addresses.addressType === 'home' ? 'selected' : '' %>>Home</option>
-                                        <option value="work" <%= addresses.addressType === 'work' ? 'selected' : '' %>>Work</option>
-                                        <option value="temp" <%= addresses.addressType === 'temp' ? 'selected' : '' %>>Temporary</option>
-                                    </select>
-                                    
+                                            <%if(typeof error!=='undefined' ){%>
+                                                <p class="text-danger">
+                                                    <%=error%>
+                                                </p>
+                                                <%}%>
+                                                    <label>Address Type</label>
+                                                    <select name="addressType">
+                                                        <option value="home" <%=addresses.addressType==='home'
+                                                            ? 'selected' : '' %>>Home</option>
+                                                        <option value="work" <%=addresses.addressType==='work'
+                                                            ? 'selected' : '' %>>Work</option>
+                                                        <option value="temp" <%=addresses.addressType==='temp'
+                                                            ? 'selected' : '' %>>Temporary</option>
+                                                    </select>
+
                                 </div><br><br>
                                 <div class="default-form-box mb-20">
                                     <label>House No</label>
@@ -632,7 +641,7 @@
                                 </div>
                                 <div class="default-form-box mb-20">
                                     <label>Pincode</label>
-                                    <input type="number" name="pincode" id="pincode"  value="<%=addresses.pincode%>">
+                                    <input type="number" name="pincode" id="pincode" value="<%=addresses.pincode%>">
                                     <p id="pincodeError" class="text-danger"></p>
                                 </div>
                                 <div class="default-form-box mb-20">
@@ -647,7 +656,7 @@
                                 </div>
                                 <div class="default-form-box mb-20">
                                     <label>State</label>
-                                    <input type="text" name="state" id="state"  value="<%=addresses.State%>">
+                                    <input type="text" name="state" id="state" value="<%=addresses.State%>">
                                     <p id="stateError" class="text-danger"></p>
                                 </div>
                                 <div class="default-form-box mb-20">
@@ -737,9 +746,10 @@
                                 <div class="login_form_container">
                                     <div class="account_login_form">
                                         <h4>Dashboard </h4>
-                            <p>From your account dashboard. you can easily check &amp; view your <a href="#">recent
-                                    orders</a>, manage your <a href="#">shipping and billing addresses</a> and <a
-                                    href="#">Edit your password and account details.</a></p>
+                                        <p>From your account dashboard. you can easily check &amp; view your <a
+                                                href="#">recent
+                                                orders</a>, manage your <a href="#">shipping and billing addresses</a>
+                                            and <a href="#">Edit your password and account details.</a></p>
                                     </div>
                                 </div>
                             </div>
@@ -809,11 +819,11 @@
                                 <div class="footer-about">
                                     <p>We are a team of designers and developers that create high quality Magento,
                                         Prestashop, Opencart.</p>
-                                        <address class="address">
-                                            <span>Address: Your address goes here.</span>
-                                            <span>Call Us: 8921504778</span>
-                                            <span>Email: varghesejoyel71@gmail.com</span>
-                                        </address>
+                                    <address class="address">
+                                        <span>Address: Your address goes here.</span>
+                                        <span>Call Us: 8921504778</span>
+                                        <span>Email: varghesejoyel71@gmail.com</span>
+                                    </address>
                                 </div>
                             </div>
                             <!-- End Footer Single Item -->
@@ -1110,66 +1120,67 @@
     <script src="assets/js/main.js"></script>
     <script src="/public/assets/js/main.js"></script>
 
-     <script>
+    <script>
         function getElementValue(id) {
-    const element = document.getElementById(id);
-    return element.value;
-}
+            const element = document.getElementById(id);
+            return element.value;
+        }
 
-function validateInput(inputId, pattern, errorId, errorMessage) {
-    const inputValue = getElementValue(inputId);
-    const errorElement = document.getElementById(errorId);
+        function validateInput(inputId, pattern, errorId, errorMessage) {
+            const inputValue = getElementValue(inputId);
+            const errorElement = document.getElementById(errorId);
 
-    if (inputValue.trim() === '') {
-        errorElement.innerText = errorMessage + ' is required.';
-        return false;
-    } else if (pattern && !pattern.test(inputValue)) {
-        errorElement.innerText = 'Please enter a valid ' + errorMessage.toLowerCase() + '.';
-        return false;
-    } else {
-        errorElement.innerText = '';
-        return true;
-    }
-}
+            if (inputValue.trim() === '') {
+                errorElement.innerText = errorMessage + ' is required.';
+                return false;
+            } else if (pattern && !pattern.test(inputValue)) {
+                errorElement.innerText = 'Please enter a valid ' + errorMessage.toLowerCase() + '.';
+                return false;
+            } else {
+                errorElement.innerText = '';
+                return true;
+            }
+        }
 
-document.addEventListener('DOMContentLoaded', function () {
-    const houseNoInput = document.getElementById('houseNo');
-    const streetInput = document.getElementById('street');
-    const landmarkInput = document.getElementById('landmark');
-    const pincodeInput = document.getElementById('pincode');
-    const cityInput = document.getElementById('city');
-    const districtInput = document.getElementById('district');
-    const stateInput = document.getElementById('state');
-    const countryInput = document.getElementById('country');
+        document.addEventListener('DOMContentLoaded', function () {
+            const houseNoInput = document.getElementById('houseNo');
+            const streetInput = document.getElementById('street');
+            const landmarkInput = document.getElementById('landmark');
+            const pincodeInput = document.getElementById('pincode');
+            const cityInput = document.getElementById('city');
+            const districtInput = document.getElementById('district');
+            const stateInput = document.getElementById('state');
+            const countryInput = document.getElementById('country');
 
-    houseNoInput.addEventListener('blur', () => validateInput('houseNo', /^\d{3}$/, 'housenoError', 'House Number'));
-    streetInput.addEventListener('blur', () => validateInput('street', /^[a-zA-Z0-9!@#$%^&*()-_+=\[\]{};:'",.<>?]+$/, 'streetError', 'Street'));
-    landmarkInput.addEventListener('blur', () => validateInput('landmark', null, 'landmarkError', 'Landmark'));
-    pincodeInput.addEventListener('blur', () => validateInput('pincode', /^\d{6}$/, 'pincodeError', 'Pincode (6 digits)'));
-    cityInput.addEventListener('blur', () => validateInput('city', /^[a-zA-Z\s]+$/, 'cityError', 'City'));
-    districtInput.addEventListener('blur', () => validateInput('district', /^[a-zA-Z\s]+$/, 'districtError', 'District'));
-    stateInput.addEventListener('blur', () => validateInput('state', /^[a-zA-Z\s]+$/, 'stateError', 'State'));
-    countryInput.addEventListener('blur', () => validateInput('country', /^[a-zA-Z\s]+$/, 'countryError', 'Country'));
-});
+            houseNoInput.addEventListener('blur', () => validateInput('houseNo', /^\d{3}$/, 'housenoError', 'House Number'));
+            streetInput.addEventListener('blur', () => validateInput('street', /^[a-zA-Z0-9!@#$%^&*()-_+=\[\]{};:'",.<>?]+$/, 'streetError', 'Street'));
+            landmarkInput.addEventListener('blur', () => validateInput('landmark', null, 'landmarkError', 'Landmark'));
+            pincodeInput.addEventListener('blur', () => validateInput('pincode', /^\d{6}$/, 'pincodeError', 'Pincode (6 digits)'));
+            cityInput.addEventListener('blur', () => validateInput('city', /^[a-zA-Z\s]+$/, 'cityError', 'City'));
+            districtInput.addEventListener('blur', () => validateInput('district', /^[a-zA-Z\s]+$/, 'districtError', 'District'));
+            stateInput.addEventListener('blur', () => validateInput('state', /^[a-zA-Z\s]+$/, 'stateError', 'State'));
+            countryInput.addEventListener('blur', () => validateInput('country', /^[a-zA-Z\s]+$/, 'countryError', 'Country'));
+        });
 
-function validateForm(event) {
-    const isValidHouseNo = validateInput('houseNo', /^\d{3}$/, 'housenoError', 'House Number');
-    const isValidStreet = validateInput('street', /^[a-zA-Z0-9!@#$%^&*()-_+=\[\]{};:'",.<>?]+$/, 'streetError', 'Street');
-    const isValidLandmark = validateInput('landmark', null, 'landmarkError', 'Landmark');
-    const isValidPincode = validateInput('pincode', /^\d{6}$/, 'pincodeError', 'Pincode (6 digits)');
-    const isValidCity = validateInput('city', /^[a-zA-Z\s]+$/, 'cityError', 'City');
-    const isValidDistrict = validateInput('district', /^[a-zA-Z\s]+$/, 'districtError', 'District');
-    const isValidState = validateInput('state', /^[a-zA-Z\s]+$/, 'stateError', 'State');
-    const isValidCountry = validateInput('country', /^[a-zA-Z\s]+$/, 'countryError', 'Country');
+        function validateForm(event) {
+            const isValidHouseNo = validateInput('houseNo', /^\d{3}$/, 'housenoError', 'House Number');
+            const isValidStreet = validateInput('street', /^[a-zA-Z0-9!@#$%^&*()-_+=\[\]{};:'",.<>?]+$/, 'streetError', 'Street');
+            const isValidLandmark = validateInput('landmark', null, 'landmarkError', 'Landmark');
+            const isValidPincode = validateInput('pincode', /^\d{6}$/, 'pincodeError', 'Pincode (6 digits)');
+            const isValidCity = validateInput('city', /^[a-zA-Z\s]+$/, 'cityError', 'City');
+            const isValidDistrict = validateInput('district', /^[a-zA-Z\s]+$/, 'districtError', 'District');
+            const isValidState = validateInput('state', /^[a-zA-Z\s]+$/, 'stateError', 'State');
+            const isValidCountry = validateInput('country', /^[a-zA-Z\s]+$/, 'countryError', 'Country');
 
-    if (!isValidHouseNo || !isValidStreet || !isValidLandmark || !isValidPincode || !isValidCity || !isValidDistrict || !isValidState || !isValidCountry) {
-        document.getElementById('mainError').innerText = 'Cannot submit form. Please fix errors.';
-        event.preventDefault(); 
-        return false;
-    }
-    return true;
-}
+            if (!isValidHouseNo || !isValidStreet || !isValidLandmark || !isValidPincode || !isValidCity || !isValidDistrict || !isValidState || !isValidCountry) {
+                document.getElementById('mainError').innerText = 'Cannot submit form. Please fix errors.';
+                event.preventDefault();
+                return false;
+            }
+            return true;
+        }
 
-</script> 
+    </script>
 </body>
+
 </html>

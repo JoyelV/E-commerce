@@ -116,20 +116,19 @@
                                 <nav>
                                     <ul>
                                         <li class="has-dropdown">
-                                            <a class="active main-menu-link" href="/home">Home <i
-                                                    class="fa fa-angle-down"></i></a>
+                                            <a class="active main-menu-link" href="/home">Home</a>
 
                                         </li>
                                         <li class="has-dropdown has-megaitem">
-                                            <a href="/shop">Shop <i class="fa fa-angle-down"></i></a>
+                                            <a href="/shop">Shop</a>
                                             <!-- Mega Menu -->
 
                                         </li>
                                         <li class="has-dropdown">
-                                            <a href="/mens">Mens <i class="fa fa-angle-down"></i></a>
+                                            <a href="/mens">Mens</a>
                                         </li>
                                         <li class="has-dropdown">
-                                            <a href="/women">Women <i class="fa fa-angle-down"></i></a>
+                                            <a href="/women">Women</a>
                                         </li>
                                         <% if (!user_id) { %>
                                             <li class="has-dropdown">
@@ -174,20 +173,19 @@
                                 <nav>
                                     <ul>
                                         <li class="has-dropdown">
-                                            <a class="active main-menu-link" href="/home">Home <i
-                                                    class="fa fa-angle-down"></i></a>
+                                            <a class="active main-menu-link" href="/home">Home</a>
 
                                         </li>
                                         <li class="has-dropdown has-megaitem">
-                                            <a href="/shop">Shop <i class="fa fa-angle-down"></i></a>
+                                            <a href="/shop">Shop</a>
                                             <!-- Mega Menu -->
                                         </li>
                                         <li class="has-dropdown">
-                                            <a href="/mens">Mens <i class="fa fa-angle-down"></i></a>
+                                            <a href="/mens">Mens</a>
 
                                         </li>
                                         <li class="has-dropdown">
-                                            <a href="/women">Womens <i class="fa fa-angle-down"></i></a>
+                                            <a href="/women">Women</a>
 
                                         </li>
                                         <% if (!user_id) { %>
@@ -660,9 +658,7 @@
                 <div class="dropdown">
                     <button class="btn btn-light dropdown-toggle" type="button" id="categoriesDropdown"
                         data-bs-toggle="dropdown" aria-expanded="false">
-                        <% let selectedCategoryName='Categories' ; 
-    // Default text 
-    if (category.length> 0 && cate) {
+                        <% let selectedCategoryName='Categories' ; if (category.length> 0 && cate) {
                             const selectedCategory = category.find(cat => cat._id.toString() === cate);
                             if (selectedCategory) {
                             selectedCategoryName = selectedCategory.name;
@@ -691,11 +687,8 @@
                     <!-- <div class="dropdown ml-3"> -->
                     <button class="btn btn-light dropdown-toggle" type="button" id="availabilityDropdown"
                         data-bs-toggle="dropdown" aria-expanded="false">
-                        <% let availabilityText='Availability' ; 
-    // Default text 
-    if (sort==='inStock' ) {
-                            availabilityText='In Stock' ; } else if (sort==='outOfStock' ) {
-                            availabilityText='Out of Stock' ; } %>
+                        <% let availabilityText='Availability' ; if (sort==='inStock' ) { availabilityText='In Stock' ;
+                            } else if (sort==='outOfStock' ) { availabilityText='Out of Stock' ; } %>
                             <%= availabilityText %>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="availabilityDropdown">
@@ -723,13 +716,11 @@
                 <div class="dropdown">
                     <button class="btn btn-light dropdown-toggle" type="button" id="sortDropdown"
                         data-bs-toggle="dropdown" aria-expanded="false" style="min-width: 200px;">
-                        <% let sortText='Sort By' ; 
-    // Default text 
-    if (sort==='rating' ) {
-                            sortText='popularity (rating)' ; } else if (sort==='newness' ) { sortText='new arrivals' ; }
-                            else if (sort==='priceAsc' ) { sortText='price: low to high' ; } else if (sort==='priceDsc'
-                            ) { sortText='price: high to low' ; } else if (sort==='nameAsc' ) { sortText='Name: A - Z' ;
-                            } else if (sort==='nameDsc' ) { sortText='Name: Z - A' ; } %>
+                        <% let sortText='Sort By' ; if (sort==='rating' ) { sortText='popularity (rating)' ; } else if
+                            (sort==='newness' ) { sortText='new arrivals' ; } else if (sort==='priceAsc' ) {
+                            sortText='price: low to high' ; } else if (sort==='priceDsc' ) {
+                            sortText='price: high to low' ; } else if (sort==='nameAsc' ) { sortText='Name: A - Z' ; }
+                            else if (sort==='nameDsc' ) { sortText='Name: Z - A' ; } %>
                             <%= sortText %>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="sortDropdown">
@@ -814,7 +805,7 @@
                                                                             <a href="#" class="customer-review ml-2"
                                                                                 style="color:rgb(237, 236, 6);"><b>
                                                                                     <%= product[i].rating.toFixed(1) %>
-                                                                                        </a></b>
+                                                                            </a></b>
                                                         </ul>
 
                                                         <div class="content-right">

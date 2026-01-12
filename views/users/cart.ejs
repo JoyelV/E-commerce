@@ -94,23 +94,22 @@
                                 <nav>
                                     <ul>
                                         <li class="has-dropdown">
-                                            <a class="active main-menu-link" href="/home">Home <i
-                                                    class="fa fa-angle-down"></i></a>
+                                            <a class="active main-menu-link" href="/home">Home</a>
                                             <!-- Sub Menu -->
 
                                         </li>
                                         <li class="has-dropdown has-megaitem">
-                                            <a href="/shop">Shop <i class="fa fa-angle-down"></i></a>
+                                            <a href="/shop">Shop</a>
                                             <!-- Mega Menu -->
 
                                         </li>
                                         <li class="has-dropdown">
-                                            <a href="/mens">Mens <i class="fa fa-angle-down"></i></a>
+                                            <a href="/mens">Mens</a>
                                             <!-- Sub Menu -->
 
                                         </li>
                                         <li class="has-dropdown">
-                                            <a href="/women">Women <i class="fa fa-angle-down"></i></a>
+                                            <a href="/women">Women</a>
 
                                         </li>
                                         <% if (!user_id) { %>
@@ -676,7 +675,8 @@
                                                                     <%=cart.items[i].productId.name%>
                                                                 </a></td>
                                                             <td class="product-price">Rs.
-                                                                <%=cart.items[i].productId.discountPrice%>.00</td>
+                                                                <%=cart.items[i].productId.discountPrice%>.00
+                                                            </td>
                                                             <td>
                                                                 <div class="detail-qty radius m-auto">
                                                                     <button
@@ -693,7 +693,8 @@
 
                                                             <td class="product_total" id="carttotal">Rs.
                                                                 <%=cart.items[i].quantity*cart.items[i].productId.discountPrice%>
-                                                                    .00</td>
+                                                                    .00
+                                                            </td>
 
                                                             <%}}}}%>
 
@@ -730,7 +731,7 @@
                                                             <h5>Available Coupons</h5><br>
                                                             <b>
                                                                 <span class="coupon_code">Code: <%= couponItem.code %>
-                                                                        </span><br>
+                                                                </span><br>
                                                                 <span class="coupon_description">Description: <%=
                                                                         couponItem.description %></span><br>
                                                                 <span class="coupon_description">Discount: <%=

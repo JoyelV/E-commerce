@@ -18,73 +18,95 @@
     <!-- Cropper.js CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
     <style>
-        .image-container { display: inline-block; position: relative; margin: 5px; }
-        .close-icon { position: absolute; top: 0; right: 0; cursor: pointer; color: red; }
-        .cropped-image-container { display: inline-block; position: relative; margin: 5px; }
-        .preview-img { max-width: 70px; max-height: 70px; }
+        .image-container {
+            display: inline-block;
+            position: relative;
+            margin: 5px;
+        }
+
+        .close-icon {
+            position: absolute;
+            top: 0;
+            right: 0;
+            cursor: pointer;
+            color: red;
+        }
+
+        .cropped-image-container {
+            display: inline-block;
+            position: relative;
+            margin: 5px;
+        }
+
+        .preview-img {
+            max-width: 70px;
+            max-height: 70px;
+        }
     </style>
 </head>
 
 <body>
     <div class="screen-overlay"></div>
-    
+
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
             <a href="index.html" class="brand-wrap">
-                <img src="/adminassets/imgs/brands/7d02989082b082e58141cce8a7536ee3.jpg" class="logo" width="150px" height="auto" display="block" 
-                margin="0 auto" alt="Moment Dashboard">
+                <img src="/adminassets/imgs/brands/7d02989082b082e58141cce8a7536ee3.jpg" class="logo" width="150px"
+                    height="auto" display="block" margin="0 auto" alt="Moment Dashboard">
                 <h4 style="color: black;">Watch Store</h4>
             </a>
             <div>
-                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i>
+                </button>
             </div>
         </div>
         <nav>
             <ul class="menu-aside">
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/dashboard"> 
+                    <a class="menu-link" href="/admin/dashboard">
                         <i class="icon material-icons md-perm_identity"></i>
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/customers"> 
+                    <a class="menu-link" href="/admin/customers">
                         <i class="icon material-icons md-person"></i>
                         <span class="text">Users</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/categories"> 
+                    <a class="menu-link" href="/admin/categories">
                         <i class="icon material-icons md-star"></i>
                         <span class="text">Categories</span>
                     </a>
                 </li>
                 <li class="menu-item active">
-                    <a class="menu-link" href="/admin/products"> 
+                    <a class="menu-link" href="/admin/products">
                         <i class="icon material-icons md-shopping_bag"></i>
                         <span class="text">Products</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/orders"> 
+                    <a class="menu-link" href="/admin/orders">
                         <i class="icon material-icons md-menu"></i>
                         <span class="text">Orders</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/stocks"> 
+                    <a class="menu-link" href="/admin/stocks">
                         <i class="icon material-icons md-apps"></i>
                         <span class="text">Inventory</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/coupons"> 
+                    <a class="menu-link" href="/admin/coupons">
                         <i class="icon material-icons md-apps"></i>
                         <span class="text">Coupon</span>
                     </a>
                 </li>
                 <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-transactions-1.html"> <i class="icon material-icons md-local_offer"></i>
+                    <a class="menu-link" href="page-transactions-1.html"> <i
+                            class="icon material-icons md-local_offer"></i>
                         <span class="text">Offers</span>
                     </a>
                     <div class="submenu">
@@ -96,10 +118,10 @@
                     <a class="menu-link" href="/admin/sales-reports"> <i class="icon material-icons md-assessment"></i>
                         <span class="text">Sales Report</span>
                     </a>
-                   
+
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/logout"> 
+                    <a class="menu-link" href="/admin/logout">
                         <i class="icon material-icons md-exit_to_app"></i>
                         <span class="text">Logout</span>
                     </a>
@@ -110,46 +132,15 @@
     <main class="main-wrap">
         <header class="main-header navbar">
             <div class="col-search"></div>
-            <div class="col-nav">
-                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside">
-                    <i class="material-icons md-apps"></i>
-                </button>
-                <ul class="nav">
-                    <li class="nav-item">
-                        <a class="nav-link btn-icon darkmode" href="#">
-                            <i class="material-icons md-nights_stay"></i>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="requestfullscreen nav-link btn-icon">
-                            <i class="material-icons md-cast"></i>
-                        </a>
-                    </li>
-                    <li class="dropdown nav-item">
-                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false">
-                            <i class="material-icons md-public"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
-                            <a class="dropdown-item text-brand" href="#">
-                                <img src="adminassets/imgs/theme/flag-us.png" alt="English">English
-                            </a>
-                        </div>
-                    </li>
-                    <li class="dropdown nav-item">
-                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false">
-                            <img class="img-xs rounded-circle" src="adminassets/imgs/people/avatar2.jpg" alt="User">
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                            <a class="dropdown-item" href="#">
-                                <i class="material-icons md-perm_identity"></i>Edit Profile
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger" href="/admin/logout">
-                                <i class="material-icons md-exit_to_app"></i>Logout
-                            </a>
-                        </div>
-                    </li>
-                </ul>
+            <i class="material-icons md-perm_identity"></i>Edit Profile
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item text-danger" href="/admin/logout">
+                <i class="material-icons md-exit_to_app"></i>Logout
+            </a>
+            </div>
+            </li>
+            </ul>
             </div>
         </header>
         <section class="content-main">
@@ -163,75 +154,91 @@
                 <div class="col-lg-6">
                     <div class="card mb-4">
                         <div class="card-body">
-                            <form action="/admin/edit-product?id=<%= proData._id %>" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+                            <form action="/admin/edit-product?id=<%= proData._id %>" method="post"
+                                enctype="multipart/form-data" onsubmit="return validateForm()">
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Name</label>
-                                    <input type="text" class="form-control" name="name" id="product_name" value="<%= proData.name %>" readonly>
+                                    <input type="text" class="form-control" name="name" id="product_name"
+                                        value="<%= proData.name %>" readonly>
                                     <p id="nameError" class="text-danger"></p>
                                 </div>
                                 <div class="mb-4">
                                     <label for="product_description" class="form-label">Description</label>
-                                    <textarea class="form-control" name="description" id="product_description" rows="4"><%= proData.description %></textarea>
+                                    <textarea class="form-control" name="description" id="product_description"
+                                        rows="4"><%= proData.description %></textarea>
                                     <p id="descriptionError" class="text-danger"></p>
                                 </div>
                                 <div class="mb-4">
                                     <label for="brand_name" class="form-label">Brand</label>
-                                    <input type="text" class="form-control" name="brand" id="brand_name" value="<%= proData.brand %>">
+                                    <input type="text" class="form-control" name="brand" id="brand_name"
+                                        value="<%= proData.brand %>">
                                     <p id="brandError" class="text-danger"></p>
                                 </div>
                                 <div class="mb-4">
                                     <label for="gender_name" class="form-label">Gender</label>
-                                    <input type="text" class="form-control" name="gender" id="gender_name" value="<%= proData.gender %>">
+                                    <input type="text" class="form-control" name="gender" id="gender_name"
+                                        value="<%= proData.gender %>">
                                     <p id="genderError" class="text-danger"></p>
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-4">
                                         <div class="mb-4">
                                             <label for="regular_price" class="form-label">Price</label>
-                                            <input type="text" class="form-control" name="price" id="regular_price" value="<%= proData.price %>">
+                                            <input type="text" class="form-control" name="price" id="regular_price"
+                                                value="<%= proData.price %>">
                                             <p id="priceError" class="text-danger"></p>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="mb-4">
                                             <label for="discount_price" class="form-label">Discount Price</label>
-                                            <input type="text" class="form-control" name="discountPrice" id="discount_price" value="<%= proData.discountPrice %>">
+                                            <input type="text" class="form-control" name="discountPrice"
+                                                id="discount_price" value="<%= proData.discountPrice %>">
                                             <p id="discountPriceError" class="text-danger"></p>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="mb-4">
                                             <label for="stock_count" class="form-label">Count of Stock</label>
-                                            <input type="number" class="form-control" name="stock" id="stock_count" value="<%= proData.countInStock %>" required>
+                                            <input type="number" class="form-control" name="stock" id="stock_count"
+                                                value="<%= proData.countInStock %>" required>
                                             <p id="stockError" class="text-danger"></p>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Category Section -->
                                 <div class="mb-4">
-                                    <% if(catData.length > 0) { %>
-                                        <% catData.forEach((category, i) => { %>
+                                    <% if(catData.length> 0) { %>
+                                        <% catData.forEach((category, i)=> { %>
                                             <label class="mb-2 form-check form-check-inline" style="width: 45%;">
-                                                <input class="form-check-input" value="<%= category._id %>" name="category" type="radio" <%= proData.category && proData.category.name === category.name ? 'checked' : '' %>>
-                                                <span class="form-check-label"><%= category.name %></span>
+                                                <input class="form-check-input" value="<%= category._id %>"
+                                                    name="category" type="radio" <%=proData.category &&
+                                                    proData.category.name===category.name ? 'checked' : '' %>>
+                                                <span class="form-check-label">
+                                                    <%= category.name %>
+                                                </span>
                                             </label>
-                                        <% }) %>
-                                    <% } %>
-                                    <div id="categoryError" class="text-danger"></div>
+                                            <% }) %>
+                                                <% } %>
+                                                    <div id="categoryError" class="text-danger"></div>
                                 </div>
                                 <!-- Media Section for Images -->
                                 <div class="mb-4">
                                     <label for="product_images" class="form-label">Images</label>
                                     <div id="existing-images">
-                                        <% proData.images.forEach(image => { %>
+                                        <% proData.images.forEach(image=> { %>
                                             <div class="image-container">
-                                                <img src="/productImages/<%= image %>" alt="" height="70px" width="70px">
-                                                <a href="/admin/edit-product?id=<%= proData._id %>&delete=<%= image %>" class="close-icon"><span aria-hidden="true">×</span></a>
+                                                <img src="/productImages/<%= image %>" alt="" height="70px"
+                                                    width="70px">
+                                                <a href="/admin/edit-product?id=<%= proData._id %>&delete=<%= image %>"
+                                                    class="close-icon"><span aria-hidden="true">×</span></a>
                                             </div>
-                                        <% }) %>
+                                            <% }) %>
                                     </div>
-                                    <input type="file" class="form-control" name="images" id="product_images" accept="image/*" multiple>
-                                    <small class="form-text text-muted">You can select multiple images (max 3 total).</small>
+                                    <input type="file" class="form-control" name="images" id="product_images"
+                                        accept="image/*" multiple>
+                                    <small class="form-text text-muted">You can select multiple images (max 3
+                                        total).</small>
                                     <p id="imagesError" class="text-danger"></p>
                                     <div id="cropped-images-preview"></div>
                                 </div>
@@ -256,18 +263,19 @@
         </footer>
     </main>
 
-                                <!-- Cropper Modal -->
-                                <div id="cropModal" style="display:none; position:fixed; top:10%; left:30%; width:40%; height:80%; background:white; border:1px solid #ccc; z-index:1000;">
-                                    <div style="text-align: right; padding: 10px;">
-                                        <button onclick="cropCurrentImage()" class="btn btn-primary">Crop</button>
-                                        <button onclick="skipImage()" class="btn btn-secondary">Skip</button>
-                                        <button onclick="finishCropping()" class="btn btn-success">Finish</button>
-                                        <button onclick="closeCropModal()" class="btn btn-danger">Cancel</button>
-                                    </div>
-                                    <div style="text-align: center;">
-                                        <img id="imageToCrop" style="max-width:100%; max-height:500px;">
-                                    </div>
-                                </div>
+    <!-- Cropper Modal -->
+    <div id="cropModal"
+        style="display:none; position:fixed; top:10%; left:30%; width:40%; height:80%; background:white; border:1px solid #ccc; z-index:1000;">
+        <div style="text-align: right; padding: 10px;">
+            <button onclick="cropCurrentImage()" class="btn btn-primary">Crop</button>
+            <button onclick="skipImage()" class="btn btn-secondary">Skip</button>
+            <button onclick="finishCropping()" class="btn btn-success">Finish</button>
+            <button onclick="closeCropModal()" class="btn btn-danger">Cancel</button>
+        </div>
+        <div style="text-align: center;">
+            <img id="imageToCrop" style="max-width:100%; max-height:500px;">
+        </div>
+    </div>
     <script src="adminassets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="adminassets/js/vendors/bootstrap.bundle.min.js"></script>
     <script src="adminassets/js/vendors/select2.min.js"></script>
@@ -326,7 +334,7 @@
                 imageQueue = Array.from(e.target.files);
                 croppedImages = [];
                 currentImageIndex = 0;
-                croppedImagesPreview.innerHTML = ''; 
+                croppedImagesPreview.innerHTML = '';
                 if (imageQueue.length > 0) {
                     showImageForCropping(imageQueue[currentImageIndex]);
                 }
@@ -508,17 +516,18 @@
                 fetch(`/product/delete-image?productId=${productId}&image=${imageId}`, {
                     method: 'DELETE',
                 })
-                .then(response => {
-                    if (response.ok) {
-                        const parentDiv = element.closest('.image-container');
-                        parentDiv.remove();
-                    } else {
-                        alert('Failed to delete the image');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
+                    .then(response => {
+                        if (response.ok) {
+                            const parentDiv = element.closest('.image-container');
+                            parentDiv.remove();
+                        } else {
+                            alert('Failed to delete the image');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
             }
         }
     </script>
 </body>
+
 </html>

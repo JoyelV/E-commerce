@@ -19,64 +19,66 @@
 
 <body>
     <div class="screen-overlay"></div>
-    
+
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
             <a href="index.html" class="brand-wrap">
-                <img src="/adminassets/imgs/brands/7d02989082b082e58141cce8a7536ee3.jpg" class="logo" width="150px" height="auto" display="block" 
-                margin="0 auto" alt="Moment Dashboard">
+                <img src="/adminassets/imgs/brands/7d02989082b082e58141cce8a7536ee3.jpg" class="logo" width="150px"
+                    height="auto" display="block" margin="0 auto" alt="Moment Dashboard">
                 <h4 style="color: black;">Watch Store</h4>
             </a>
             <div>
-                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i>
+                </button>
             </div>
         </div>
         <nav>
             <ul class="menu-aside">
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/dashboard"> 
+                    <a class="menu-link" href="/admin/dashboard">
                         <i class="icon material-icons md-perm_identity"></i>
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/customers"> 
+                    <a class="menu-link" href="/admin/customers">
                         <i class="icon material-icons md-person"></i>
                         <span class="text">Users</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/categories"> 
+                    <a class="menu-link" href="/admin/categories">
                         <i class="icon material-icons md-star"></i>
                         <span class="text">Categories</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/products"> 
+                    <a class="menu-link" href="/admin/products">
                         <i class="icon material-icons md-shopping_bag"></i>
                         <span class="text">Products</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/orders"> 
+                    <a class="menu-link" href="/admin/orders">
                         <i class="icon material-icons md-menu"></i>
                         <span class="text">Orders</span>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/stocks"> 
+                    <a class="menu-link" href="/admin/stocks">
                         <i class="icon material-icons md-apps"></i>
                         <span class="text">Inventory</span>
                     </a>
                 </li>
                 <li class="menu-item active">
-                    <a class="menu-link" href="/admin/coupons"> 
+                    <a class="menu-link" href="/admin/coupons">
                         <i class="icon material-icons md-apps"></i>
                         <span class="text">Coupon</span>
                     </a>
                 </li>
                 <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-transactions-1.html"> <i class="icon material-icons md-local_offer"></i>
+                    <a class="menu-link" href="page-transactions-1.html"> <i
+                            class="icon material-icons md-local_offer"></i>
                         <span class="text">Offers</span>
                     </a>
                     <div class="submenu">
@@ -88,10 +90,10 @@
                     <a class="menu-link" href="/admin/sales-reports"> <i class="icon material-icons md-assessment"></i>
                         <span class="text">Sales Report</span>
                     </a>
-                   
+
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin/logout"> 
+                    <a class="menu-link" href="/admin/logout">
                         <i class="icon material-icons md-exit_to_app"></i>
                         <span class="text">Logout</span>
                     </a>
@@ -102,61 +104,9 @@
     <main class="main-wrap">
         <header class="main-header navbar">
             <div class="col-search">
-                
+
             </div>
-            <div class="col-nav">
-                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i
-                        class="material-icons md-apps"></i> </button>
-                <ul class="nav">
-                    <li class="nav-item">
-                        <a class="nav-link btn-icon" href="#">
-                            <i class="material-icons md-notifications animation-shake"></i>
-                            <span class="badge rounded-pill">3</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="requestfullscreen nav-link btn-icon"><i
-                                class="material-icons md-cast"></i></a>
-                    </li>
-                    <li class="dropdown nav-item">
-                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage"
-                            aria-expanded="false"><i class="material-icons md-public"></i></a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
-                            <a class="dropdown-item text-brand" href="#"><img src="adminassets/imgs/theme/flag-us.png"
-                                    alt="English">English</a>
-                            <a class="dropdown-item" href="#"><img src="adminassets/imgs/theme/flag-fr.png"
-                                    alt="Français">Français</a>
-                            <a class="dropdown-item" href="#"><img src="adminassets/imgs/theme/flag-jp.png"
-                                    alt="Français">日本語</a>
-                            <a class="dropdown-item" href="#"><img src="adminassets/imgs/theme/flag-cn.png"
-                                    alt="Français">中国人</a>
-                        </div>
-                    </li>
-                    <li class="dropdown nav-item">
-                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount"
-                            aria-expanded="false"> <img class="img-xs rounded-circle"
-                                src="adminassets/imgs/people/avatar2.jpg" alt="User"></a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit
-                                Profile</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account
-                                Settings</a>
-                            <a class="dropdown-item" href="#"><i
-                                    class="material-icons md-account_balance_wallet"></i>Wallet</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help
-                                center</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger" href="/admin/logout"><i
-                                    class="material-icons md-exit_to_app"></i>Logout</a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+
         </header>
         <section class="content-main">
             <div class="content-header">
@@ -168,78 +118,78 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                        <div class="mb-4">
-                            <label for="couponName" class="form-label">Coupon Name</label>
-                            <input type="text" placeholder="Type here" class="form-control" name="name" id="couponName"
-                                required />
-                            <p id="nameError" class="text-danger"></p>
-                        </div>
+                    <div class="mb-4">
+                        <label for="couponName" class="form-label">Coupon Name</label>
+                        <input type="text" placeholder="Type here" class="form-control" name="name" id="couponName"
+                            required />
+                        <p id="nameError" class="text-danger"></p>
+                    </div>
 
-                        <div class="mb-4">
-                            <label for="couponCode" class="form-label">Coupon Code</label>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" name="code" id="couponCode"
-                                    placeholder="Generate or type" aria-label="Coupon code" required>
-                                <button class="btn btn-primary" type="button" id="generateCode">Generate Code</button>
-                            </div>
+                    <div class="mb-4">
+                        <label for="couponCode" class="form-label">Coupon Code</label>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" name="code" id="couponCode"
+                                placeholder="Generate or type" aria-label="Coupon code" required>
+                            <button class="btn btn-primary" type="button" id="generateCode">Generate Code</button>
                         </div>
+                    </div>
 
-                        <div class="mb-4">
-                            <label class="form-label">Description</label>
-                            <textarea placeholder="Type here" class="form-control" name="description" id="description"
-                                required></textarea>
-                            <p id="descriptionError" class="text-danger"></p>
-                        </div>
+                    <div class="mb-4">
+                        <label class="form-label">Description</label>
+                        <textarea placeholder="Type here" class="form-control" name="description" id="description"
+                            required></textarea>
+                        <p id="descriptionError" class="text-danger"></p>
+                    </div>
 
-                        <div class="mb-4">
-                            <label for="discountPercentage" class="form-label">Discount Percentage (%)</label>
-                            <input type="number" class="form-control" min="0" name="discountPercentage"
-                                id="discountPercentage" required />
-                            <p id="discountPercentageError" class="text-danger"></p>
-                        </div>
+                    <div class="mb-4">
+                        <label for="discountPercentage" class="form-label">Discount Percentage (%)</label>
+                        <input type="number" class="form-control" min="0" name="discountPercentage"
+                            id="discountPercentage" required />
+                        <p id="discountPercentageError" class="text-danger"></p>
+                    </div>
 
-                        <div class="mb-4">
-                            <label for="minPurchaseAmount" class="form-label">Minimum Purchase Amount</label>
-                            <input type="number" class="form-control" name="minPurchaseAmount" id="minPurchaseAmount"
-                                required />
-                            <p id="minimumAmountError" class="text-danger"></p>
-                        </div>
+                    <div class="mb-4">
+                        <label for="minPurchaseAmount" class="form-label">Minimum Purchase Amount</label>
+                        <input type="number" class="form-control" name="minPurchaseAmount" id="minPurchaseAmount"
+                            required />
+                        <p id="minimumAmountError" class="text-danger"></p>
+                    </div>
 
-                        <div class="mb-4">
-                            <label for="maxPurchaseAmount" class="form-label">Maximum Purchase Amount</label>
-                            <input type="number" class="form-control" name="maxPurchaseAmount" id="maxPurchaseAmount"
-                                required />
-                            <p id="maximumAmountError" class="text-danger"></p>
-                        </div>
+                    <div class="mb-4">
+                        <label for="maxPurchaseAmount" class="form-label">Maximum Purchase Amount</label>
+                        <input type="number" class="form-control" name="maxPurchaseAmount" id="maxPurchaseAmount"
+                            required />
+                        <p id="maximumAmountError" class="text-danger"></p>
+                    </div>
 
-                        <div class="mb-4">
-                            <label for="expirationDate" class="form-label">Expiration Date</label>
-                            <input type="date" class="form-control" name="expirationDate" id="expirationDate"
-                                required />
-                            <p id="expirationDateError" class="text-danger"></p>
-                        </div>
+                    <div class="mb-4">
+                        <label for="expirationDate" class="form-label">Expiration Date</label>
+                        <input type="date" class="form-control" name="expirationDate" id="expirationDate" required />
+                        <p id="expirationDateError" class="text-danger"></p>
+                    </div>
 
-                        <div class="mb-4">
-                            <label for="maxUsers" class="form-label">Maximum Users Allowed</label>
-                            <input type="number" class="form-control" name="maxUsers" id="maxUsers" required />
-                            <p id="maxUsersError" class="text-danger"></p>
-                        </div>
+                    <div class="mb-4">
+                        <label for="maxUsers" class="form-label">Maximum Users Allowed</label>
+                        <input type="number" class="form-control" name="maxUsers" id="maxUsers" required />
+                        <p id="maxUsersError" class="text-danger"></p>
+                    </div>
 
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary" id="submitForm" onclick="addCoupon()">Create Coupon</button>
-                        </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary" id="submitForm" onclick="addCoupon()">Create
+                            Coupon</button>
+                    </div>
                     <div class="mt-3">
                         <a href="/admin/coupons" class="btn btn-secondary">Go Back</a>
                     </div>
                 </div>
             </div>
 
-        </section> 
+        </section>
         <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
                 <div class="col-sm-6">
                     <script>
-                    document.write(new Date().getFullYear())
+                        document.write(new Date().getFullYear())
                     </script> ©, Evara - HTML Ecommerce Template .
                 </div>
                 <div class="col-sm-6">
@@ -266,26 +216,26 @@
             const randomCode = 'CP' + Math.random().toString(36).substr(2, 8).toUpperCase();
             document.getElementById('couponCode').value = randomCode;
         };
-    
+
         document.addEventListener('DOMContentLoaded', function () {
             const today = new Date();
             const tomorrow = new Date(today);
             tomorrow.setDate(tomorrow.getDate() + 1);
             const formattedDate = tomorrow.toISOString().split('T')[0];
-    
+
             const expirationDateInput = document.getElementById('expirationDate');
             expirationDateInput.value = formattedDate;
             expirationDateInput.min = formattedDate;
-    
+
             const minimumAmountInput = document.getElementById('minPurchaseAmount');
             const maximumAmountInput = document.getElementById('maxPurchaseAmount');
             maximumAmountInput.min = minimumAmountInput.value;
         });
-    
+
         function validateInput(inputId, pattern, errorId, errorMessage) {
             const inputValue = document.getElementById(inputId).value.trim();
             const errorElement = document.getElementById(errorId);
-    
+
             if (inputValue === '') {
                 errorElement.innerText = errorMessage + ' is required.';
                 return false;
@@ -297,12 +247,12 @@
                 return true;
             }
         }
-    
+
         function validateDescription() {
             const description = document.getElementById('description').value.trim();
             const descriptionError = document.getElementById('descriptionError');
             const descriptionPattern = /^[a-zA-Z0-9\s,.'-]*$/;
-    
+
             if (description === '') {
                 descriptionError.innerText = 'Description is required.';
                 return false;
@@ -317,13 +267,13 @@
                 return true;
             }
         }
-    
+
         function validateAmounts() {
             const minimumAmount = parseFloat(document.getElementById('minPurchaseAmount').value);
             const maximumAmount = parseFloat(document.getElementById('maxPurchaseAmount').value);
             const minimumAmountError = document.getElementById('minimumAmountError');
             const maximumAmountError = document.getElementById('maximumAmountError');
-    
+
             if (isNaN(minimumAmount) || isNaN(maximumAmount) || minimumAmount < 0 || maximumAmount < 0) {
                 minimumAmountError.innerText = 'Minimum and maximum amounts must be non-negative numbers.';
                 maximumAmountError.innerText = 'Minimum and maximum amounts must be non-negative numbers.';
@@ -338,12 +288,12 @@
                 return true;
             }
         }
-    
+
         function validateDiscountPercentage() {
             const discountPercentageInput = document.getElementById('discountPercentage');
             const discountPercentage = parseFloat(discountPercentageInput.value.trim());
             const discountPercentageError = document.getElementById('discountPercentageError');
-    
+
             if (discountPercentageInput.value.trim() === '') {
                 discountPercentageError.innerHTML = "Discount percentage is required";
             } else if (isNaN(discountPercentage) || discountPercentage < 5 || discountPercentage > 65) {
@@ -352,12 +302,12 @@
                 discountPercentageError.innerHTML = "";
             }
         }
-    
+
         function validateMaxUsers() {
             const maxUsersInput = document.getElementById('maxUsers');
             const maxUsersError = document.getElementById('maxUsersError');
             const maxUsers = parseInt(maxUsersInput.value.trim());
-    
+
             if (maxUsersInput.value.trim() === '') {
                 maxUsersError.innerText = "Maximum users allowed is required";
                 return false;
@@ -369,75 +319,75 @@
                 return true;
             }
         }
-    
+
         function clearErrorMessage(event) {
             const input = event.target;
             const errorElement = document.getElementById(input.id + 'Error');
             errorElement.innerText = '';
         }
-    
+
         document.addEventListener('DOMContentLoaded', function () {
             const descriptionInput = document.getElementById('description');
             const discountPercentage = document.getElementById('discountPercentage');
             const minAmountInput = document.getElementById('minPurchaseAmount');
             const maxAmountInput = document.getElementById('maxPurchaseAmount');
             const maxUsersInput = document.getElementById('maxUsers');
-    
+
             descriptionInput.addEventListener('blur', validateDescription);
             discountPercentage.addEventListener('blur', validateDiscountPercentage);
             minAmountInput.addEventListener('blur', validateAmounts);
             maxAmountInput.addEventListener('blur', validateAmounts);
             maxUsersInput.addEventListener('blur', validateMaxUsers);
-    
+
             const inputs = [descriptionInput, discountPercentage, minAmountInput, maxAmountInput, maxUsersInput];
-    
+
             inputs.forEach(input => {
                 input.addEventListener('focus', clearErrorMessage);
             });
         });
-    
+
         document.getElementById('generateCode').addEventListener('click', function () {
             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             const codeLength = 8;
             let randomCode = '';
-    
+
             for (let i = 0; i < codeLength; i++) {
                 const randomIndex = Math.floor(Math.random() * characters.length);
                 randomCode += characters.charAt(randomIndex);
             }
-    
+
             document.getElementById('couponCode').value = randomCode;
         });
-    
+
         function submitForm(event) {
             event.preventDefault();
-    
+
             const isValid = validateDescription() && validateAmounts() && validateMaxUsers() && validateDiscountPercentage();
-    
+
             if (!isValid) {
                 document.getElementById('main-error').innerText = 'Please correct the fields.';
                 return;
             }
-    
+
             const maxUsersInput = document.getElementById('maxUsers');
             if (maxUsersInput.value.trim() === '') {
                 document.getElementById('maxUsersError').innerText = "Maximum users allowed is required";
                 return;
             }
-    
-            addCoupon(); 
+
+            addCoupon();
         }
-    
+
         function addCoupon() {
             const maxUsersInput = document.getElementById('maxUsers');
             const maxUsersError = document.getElementById('maxUsersError');
             const maxUsers = maxUsersInput.value.trim();
-    
+
             if (maxUsers === '') {
                 maxUsersError.innerText = "Maximum users allowed is required";
-                return; 
+                return;
             }
-    
+
             const description = document.getElementById('description').value;
             const name = document.getElementById('couponName').value;
             const code = document.getElementById('couponCode').value;
@@ -445,7 +395,7 @@
             const minPurchaseAmount = document.getElementById('minPurchaseAmount').value;
             const maxPurchaseAmount = document.getElementById('maxPurchaseAmount').value;
             const expirationDate = document.getElementById('expirationDate').value;
-    
+
             const formObject = {
                 description: description,
                 name: name,
@@ -456,9 +406,9 @@
                 expirationDate: expirationDate,
                 maxUsers: maxUsers
             };
-    
+
             console.log(formObject);
-    
+
             fetch('/admin/coupons', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -494,7 +444,8 @@
                     });
                 });
         }
-</script>
-    
+    </script>
+
 </body>
+
 </html>
